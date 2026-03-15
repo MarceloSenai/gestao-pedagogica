@@ -2,7 +2,7 @@
 
 interface StatusBadgeProps {
   status: string;
-  variant?: "ambiente" | "recurso" | "chamado" | "prioridade" | "planejamento" | "alocacao";
+  variant?: "ambiente" | "recurso" | "chamado" | "prioridade" | "planejamento" | "alocacao" | "alteracao" | "bottleneck";
 }
 
 const colors: Record<string, Record<string, string>> = {
@@ -37,6 +37,17 @@ const colors: Record<string, Record<string, string>> = {
     nao_alocada: "bg-red-100 text-red-700",
     conflito: "bg-yellow-100 text-yellow-700",
   },
+  alteracao: {
+    pendente: "bg-yellow-100 text-yellow-700",
+    aprovada: "bg-green-100 text-green-700",
+    rejeitada: "bg-red-100 text-red-700",
+  },
+  bottleneck: {
+    capacidade: "bg-red-100 text-red-700",
+    recurso: "bg-orange-100 text-orange-700",
+    turno: "bg-yellow-100 text-yellow-700",
+    docente: "bg-purple-100 text-purple-700",
+  },
 };
 
 const labels: Record<string, string> = {
@@ -58,6 +69,16 @@ const labels: Record<string, string> = {
   alocada: "Alocada",
   nao_alocada: "Não Alocada",
   conflito: "Conflito",
+  pendente: "Pendente",
+  aprovada: "Aprovada",
+  rejeitada: "Rejeitada",
+  adicionar: "Adicionar",
+  remover: "Remover",
+  modificar: "Modificar",
+  capacidade: "Capacidade",
+  recurso_bottleneck: "Recurso",
+  turno_bottleneck: "Turno",
+  docente: "Docente",
 };
 
 export function StatusBadge({ status, variant = "chamado" }: StatusBadgeProps) {

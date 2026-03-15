@@ -152,3 +152,105 @@ export function runAllocation(
 
   return results;
 }
+
+// --- Story 10.0: Modo Consultivo (FR-42) ---
+
+export interface BottleneckAnalysis {
+  tipo: "capacidade" | "recurso" | "turno" | "docente";
+  descricao: string;
+  turmas_afetadas: string[];
+  sugestao: string;
+}
+
+export function analyzeBottlenecks(
+  turmas: TurmaInput[],
+  ambientes: AmbienteInput[],
+  results: AllocationResult[],
+): BottleneckAnalysis[] {
+  const unallocated = results.filter((r) => r.status !== "alocada");
+  const bottlenecks: BottleneckAnalysis[] = [];
+
+  if (unallocated.length === 0) return bottlenecks;
+
+  // Analyze capacity bottleneck
+  const capacityIssues = unallocated.filter((r) =>
+    r.motivo?.includes("capacidade"),
+  );
+  if (capacityIssues.length > 0) {
+    bottlenecks.push({
+      tipo: "capacidade",
+      descricao: `${capacityIssues.length} turma(s) sem ambiente com capacidade suficiente`,
+      turmas_afetadas: capacityIssues.map((r) => r.turma_id),
+      sugestao:
+        "Considere dividir turmas grandes ou aumentar capacidade de ambientes",
+    });
+  }
+
+  // Analyze turno saturation
+  const turnoCount: Record<string, number> = {};
+  for (const t of turmas) {
+    turnoCount[t.turno] = (turnoCount[t.turno] || 0) + 1;
+  }
+  const activeAmbientes = ambientes.filter((a) => a.status === "ativo").length;
+  for (const [turno, count] of Object.entries(turnoCount)) {
+    if (count > activeAmbientes) {
+      const turnoTurmas = unallocated
+        .filter(
+          (r) => turmas.find((t) => t.id === r.turma_id)?.turno === turno,
+        )
+        .map((r) => r.turma_id);
+      if (turnoTurmas.length > 0) {
+        const label =
+          turno === "manha" ? "Manha" : turno === "tarde" ? "Tarde" : "Noite";
+        bottlenecks.push({
+          tipo: "turno",
+          descricao: `Turno ${label}: ${count} turmas para ${activeAmbientes} ambientes`,
+          turmas_afetadas: turnoTurmas,
+          sugestao: `Redistribuir turmas do turno ${label} para outros turnos`,
+        });
+      }
+    }
+  }
+
+  // Analyze resource scarcity
+  const resourceNeeded: Record<string, number> = {};
+  for (const t of turmas) {
+    for (const r of t.requisitos_recursos) {
+      resourceNeeded[r] = (resourceNeeded[r] || 0) + 1;
+    }
+  }
+  const resourceAvailable: Record<string, number> = {};
+  for (const a of ambientes.filter((a) => a.status === "ativo")) {
+    for (const r of a.recurso_ids) {
+      resourceAvailable[r] = (resourceAvailable[r] || 0) + 1;
+    }
+  }
+  for (const [recId, needed] of Object.entries(resourceNeeded)) {
+    const available = resourceAvailable[recId] || 0;
+    if (needed > available) {
+      bottlenecks.push({
+        tipo: "recurso",
+        descricao: `Recurso ${recId}: ${needed} turmas precisam, apenas ${available} ambientes possuem`,
+        turmas_afetadas: [],
+        sugestao:
+          "Adicionar recurso a mais ambientes ou flexibilizar requisitos",
+      });
+    }
+  }
+
+  // Analyze docente conflicts
+  const docenteConflicts = unallocated.filter(
+    (r) => r.motivo?.includes("Docente"),
+  );
+  if (docenteConflicts.length > 0) {
+    bottlenecks.push({
+      tipo: "docente",
+      descricao: `${docenteConflicts.length} turma(s) com conflito de docente no mesmo turno`,
+      turmas_afetadas: docenteConflicts.map((r) => r.turma_id),
+      sugestao:
+        "Redistribuir turmas entre docentes ou alterar turnos para evitar conflitos",
+    });
+  }
+
+  return bottlenecks;
+}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import {
   runAllocation,
+  analyzeBottlenecks,
   type TurmaInput,
   type AmbienteInput,
 } from "@/lib/allocation/engine";
@@ -159,7 +160,10 @@ export async function POST(
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
-  // 8. Return results + summary
+  // 8. Analyze bottlenecks (Story 10.0 — Modo Consultivo)
+  const bottlenecks = analyzeBottlenecks(turmaInputs, ambienteInputs, results);
+
+  // 9. Return results + summary + bottlenecks
   const alocadas = results.filter((r) => r.status === "alocada").length;
   const naoAlocadas = results.filter((r) => r.status === "nao_alocada").length;
   const conflitos = results.filter((r) => r.status === "conflito").length;
@@ -185,5 +189,6 @@ export async function POST(
       conflitos,
       taxa_sucesso: taxaSucesso,
     },
+    bottlenecks,
   });
 }

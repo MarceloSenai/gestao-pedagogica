@@ -464,6 +464,76 @@ export interface Database {
         };
         Relationships: [];
       };
+      alteracoes_extraordinarias: {
+        Row: {
+          id: string;
+          planejamento_id: string;
+          tipo: string;
+          descricao: string;
+          turma_id: string | null;
+          ambiente_anterior_id: string | null;
+          ambiente_novo_id: string | null;
+          status: string;
+          justificativa: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          planejamento_id: string;
+          tipo: string;
+          descricao: string;
+          turma_id?: string | null;
+          ambiente_anterior_id?: string | null;
+          ambiente_novo_id?: string | null;
+          status?: string;
+          justificativa: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          planejamento_id?: string;
+          tipo?: string;
+          descricao?: string;
+          turma_id?: string | null;
+          ambiente_anterior_id?: string | null;
+          ambiente_novo_id?: string | null;
+          status?: string;
+          justificativa?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "alteracoes_extraordinarias_planejamento_id_fkey";
+            columns: ["planejamento_id"];
+            isOneToOne: false;
+            referencedRelation: "planejamentos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alteracoes_extraordinarias_turma_id_fkey";
+            columns: ["turma_id"];
+            isOneToOne: false;
+            referencedRelation: "turmas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alteracoes_extraordinarias_ambiente_anterior_id_fkey";
+            columns: ["ambiente_anterior_id"];
+            isOneToOne: false;
+            referencedRelation: "ambientes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alteracoes_extraordinarias_ambiente_novo_id_fkey";
+            columns: ["ambiente_novo_id"];
+            isOneToOne: false;
+            referencedRelation: "ambientes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       notificacoes: {
         Row: {
           id: string;
@@ -493,6 +563,33 @@ export interface Database {
           mensagem?: string;
           destinatario_id?: string | null;
           lida?: boolean;
+        };
+        Relationships: [];
+      };
+      configuracoes: {
+        Row: {
+          id: string;
+          chave: string;
+          valor: Json;
+          descricao: string | null;
+          categoria: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          chave: string;
+          valor: Json;
+          descricao?: string | null;
+          categoria?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          chave?: string;
+          valor?: Json;
+          descricao?: string | null;
+          categoria?: string;
+          updated_at?: string;
         };
         Relationships: [];
       };
@@ -573,3 +670,14 @@ export type ChamadoStatus = "aberto" | "em_andamento" | "resolvido";
 export type Notificacao = Database["public"]["Tables"]["notificacoes"]["Row"];
 export type NotificacaoInsert = Database["public"]["Tables"]["notificacoes"]["Insert"];
 export type NotificacaoTipo = "info" | "alerta" | "conflito" | "sistema";
+
+export type Configuracao = Database["public"]["Tables"]["configuracoes"]["Row"];
+export type ConfiguracaoInsert = Database["public"]["Tables"]["configuracoes"]["Insert"];
+export type ConfiguracaoUpdate = Database["public"]["Tables"]["configuracoes"]["Update"];
+export type ConfiguracaoCategoria = "geral" | "algoritmo" | "calendario" | "limites";
+
+export type AlteracaoExtraordinaria = Database["public"]["Tables"]["alteracoes_extraordinarias"]["Row"];
+export type AlteracaoExtraordinariaInsert = Database["public"]["Tables"]["alteracoes_extraordinarias"]["Insert"];
+export type AlteracaoExtraordinariaUpdate = Database["public"]["Tables"]["alteracoes_extraordinarias"]["Update"];
+export type AlteracaoTipo = "adicionar" | "remover" | "modificar";
+export type AlteracaoStatus = "pendente" | "aprovada" | "rejeitada";
