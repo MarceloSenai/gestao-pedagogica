@@ -120,13 +120,13 @@ export default function PessoasPage() {
     },
   ];
 
-  if (loading) return <p className="p-6 text-gray-500">Carregando...</p>;
-  if (error) return <p className="p-6 text-red-600">Erro: {error}</p>;
+  if (loading) return <div className="space-y-3"><div className="h-8 w-48 animate-pulse rounded bg-[var(--color-primary-light)]" /><div className="h-64 animate-pulse rounded-lg bg-[var(--color-primary-light)]" /></div>;
+  if (error) return <div className="rounded-lg border border-red-200 bg-red-50 p-4"><p className="text-sm text-red-700">{error}</p></div>;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Pessoas</h1>
+        <h1 className="font-[family-name:var(--font-space-grotesk)] text-xl font-semibold text-[var(--color-text)]">Pessoas</h1>
         <Button variant="primary" onClick={openCreate}>
           Nova Pessoa
         </Button>

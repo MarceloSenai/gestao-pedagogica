@@ -22,7 +22,7 @@ interface FormFieldProps {
 }
 
 const inputClasses =
-  "w-full rounded border border-[var(--color-primary-light)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] transition-colors";
+  "w-full rounded border border-[var(--color-primary-light)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] transition-colors duration-150";
 
 const errorInputClasses =
   "border-[var(--color-accent)] focus:border-[var(--color-accent)] focus:ring-[var(--color-accent)]";
@@ -43,7 +43,7 @@ export function FormField({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-[var(--color-text)]">
+      <label htmlFor={id} className="text-xs uppercase tracking-wide font-semibold text-[var(--color-text-muted)]">
         {label}
         {required && <span className="ml-0.5 text-[var(--color-accent)]">*</span>}
       </label>
@@ -55,7 +55,7 @@ export function FormField({
           value={value}
           onChange={onChange}
           required={required}
-          className={fieldClasses}
+          className={`${fieldClasses} h-10`}
         >
           <option value="">{placeholder ?? "Selecione..."}</option>
           {options.map((opt) => (
@@ -84,7 +84,7 @@ export function FormField({
           onChange={onChange}
           required={required}
           placeholder={placeholder}
-          className={fieldClasses}
+          className={`${fieldClasses} h-10`}
         />
       )}
 

@@ -9,14 +9,20 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    <div className="flex h-screen overflow-hidden bg-[#f8f8f8]">
+      <Sidebar
+        open={sidebarOpen}
+        collapsed={collapsed}
+        onClose={() => setSidebarOpen(false)}
+        onToggleCollapse={() => setCollapsed((c) => !c)}
+      />
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Mobile header */}
-        <header className="flex h-16 items-center border-b border-[var(--color-primary-light)] px-4 lg:hidden">
+        <header className="flex h-14 items-center border-b border-[var(--color-primary-light)] bg-[var(--color-surface)] shadow-sm px-4 lg:hidden">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
@@ -25,8 +31,8 @@ export function AppShell({ children }: AppShellProps) {
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -39,12 +45,12 @@ export function AppShell({ children }: AppShellProps) {
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
-          <span className="ml-3 font-heading text-lg font-bold text-[var(--color-text)]">
+          <span className="ml-3 font-[family-name:var(--font-space-grotesk)] text-base font-semibold text-[var(--color-text)]">
             Gestão Pedagógica
           </span>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-8">{children}</main>
       </div>
     </div>
   );

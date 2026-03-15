@@ -1,0 +1,25 @@
+[
+  {
+    "method": "GET",
+    "path": "/api/gestao-pedagogica-demandas",
+    "description": "List gestao pedagogica demandas",
+    "module": "Gestão Pedagógica e Demanda",
+    "flowName": "Definição de Requisitos para Disciplina",
+    "auth": true,
+    "responseBody": "Disciplina"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/gestao-pedagogica-demandas/:id",
+    "description": "Update gestao pedagogica demandas",
+    "module": "Gestão Pedagógica e Demanda",
+    "flowName": "Definição de Requisitos para Disciplina",
+    "auth": true,
+    "requestBody": {
+      "id": "text",
+      "nome": "text",
+      "cargaHoraria": "number",
+      "requisitosRecursos": "list"
+    }
+  }
+]

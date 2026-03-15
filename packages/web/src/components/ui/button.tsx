@@ -13,11 +13,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--color-primary)] text-white hover:bg-[var(--color-surface-dark)]",
+    "bg-[var(--color-primary)] text-white shadow-sm hover:bg-[#1a1a1a]",
   secondary:
-    "border border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent hover:bg-[var(--color-primary-light)]",
+    "border border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent hover:bg-[var(--color-primary-light)] hover:border-[var(--color-accent)]",
   danger:
-    "bg-[var(--color-accent)] text-white hover:bg-red-700",
+    "bg-[var(--color-accent)] text-white hover:bg-[#dc2626]",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -38,7 +38,7 @@ export function Button({
   return (
     <button
       disabled={disabled || loading}
-      className={`inline-flex items-center justify-center gap-2 rounded font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded font-medium transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.97] cursor-pointer ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
       {loading && (

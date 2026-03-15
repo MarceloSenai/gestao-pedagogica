@@ -255,6 +255,91 @@ export interface Database {
           },
         ];
       };
+      turmas: {
+        Row: {
+          id: string;
+          disciplina_id: string;
+          docente_id: string | null;
+          semestre: string;
+          ano: number;
+          turno: string;
+          vagas: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          disciplina_id: string;
+          docente_id?: string | null;
+          semestre: string;
+          ano: number;
+          turno: string;
+          vagas?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          disciplina_id?: string;
+          docente_id?: string | null;
+          semestre?: string;
+          ano?: number;
+          turno?: string;
+          vagas?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "turmas_disciplina_id_fkey";
+            columns: ["disciplina_id"];
+            isOneToOne: false;
+            referencedRelation: "disciplinas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "turmas_docente_id_fkey";
+            columns: ["docente_id"];
+            isOneToOne: false;
+            referencedRelation: "pessoas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      matriculas: {
+        Row: {
+          id: string;
+          turma_id: string;
+          aluno_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          turma_id: string;
+          aluno_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          turma_id?: string;
+          aluno_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "matriculas_turma_id_fkey";
+            columns: ["turma_id"];
+            isOneToOne: false;
+            referencedRelation: "turmas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "matriculas_aluno_id_fkey";
+            columns: ["aluno_id"];
+            isOneToOne: false;
+            referencedRelation: "pessoas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -299,3 +384,12 @@ export type PessoaPerfil =
   | "aluno"
   | "apoio_ti"
   | "auditor";
+
+export type Turma = Database["public"]["Tables"]["turmas"]["Row"];
+export type TurmaInsert = Database["public"]["Tables"]["turmas"]["Insert"];
+export type TurmaUpdate = Database["public"]["Tables"]["turmas"]["Update"];
+
+export type Matricula = Database["public"]["Tables"]["matriculas"]["Row"];
+export type MatriculaInsert = Database["public"]["Tables"]["matriculas"]["Insert"];
+
+export type TurmasTurno = "manha" | "tarde" | "noite";

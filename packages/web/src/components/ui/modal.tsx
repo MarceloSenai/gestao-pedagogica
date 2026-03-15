@@ -53,9 +53,9 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
     <dialog
       ref={dialogRef}
       onClick={handleBackdropClick}
-      className="w-full max-w-lg rounded-lg border border-[var(--color-primary-light)] bg-[var(--color-surface)] p-0 shadow-lg backdrop:bg-black/50"
+      className="w-full max-w-lg rounded-xl border border-[var(--color-primary-light)] bg-[var(--color-surface)] p-0 shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-sm"
     >
-      <div className="flex items-center justify-between border-b border-[var(--color-primary-light)] px-6 py-4">
+      <div className="flex items-center justify-between border-b border-[var(--color-primary-light)] px-6 pt-6 pb-4">
         <h2 className="font-heading text-lg font-semibold text-[var(--color-text)]">
           {title}
         </h2>
@@ -85,7 +85,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
       <div className="px-6 py-4">{children}</div>
 
       {footer && (
-        <div className="flex justify-end gap-2 border-t border-[var(--color-primary-light)] px-6 py-4">
+        <div className="flex justify-end gap-2 border-t border-[var(--color-primary-light)] px-6 pt-4 pb-6">
           {footer}
         </div>
       )}

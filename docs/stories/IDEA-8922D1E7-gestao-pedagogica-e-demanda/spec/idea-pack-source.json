@@ -1,0 +1,290 @@
+{
+  "storyId": "IDEA-8922D1E7-gestao-pedagogica-e-demanda",
+  "gatheredAt": "2026-03-15T18:37:54.495Z",
+  "source": "idea-pack",
+  "gatheredBy": "@idea-estruturada",
+  "elicitationVersion": "2.0",
+  "projectTitle": "Gestão Pedagógica",
+  "projectId": "8922d1e7-a231-469f-8539-2ef53fcf89b5",
+  "functional": [
+    {
+      "id": "FR-1",
+      "description": "EduResource automatiza a logística de uso dos espaços escolares, garantindo ambientes adequados com recursos necessários para cada disciplina, otimizando custos e melhorando a qualidade pedagógica.",
+      "priority": "P0",
+      "rationale": "Core product vision",
+      "sourceType": "VISION",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-2",
+      "description": "[Módulo] Gestão Pedagógica e Demanda: Módulo para cadastro de cursos, disciplinas, matrizes de recursos, perfis de alunos e docentes, e agrupamento de turmas para cálculo de lotação.",
+      "priority": "P1",
+      "sourceType": "MODULE",
+      "sourceLayer": 1,
+      "module": "Gestão Pedagógica e Demanda",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-3",
+      "description": "Sistema inteligente para otimizar a infraestrutura física e pedagógica de unidades escolares, automatizando a logística de uso de espaços e recursos para garantir uso eficiente e qualidade pedagógica.",
+      "priority": "P0",
+      "rationale": "Core product vision",
+      "sourceType": "VISION",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-4",
+      "description": "[Regra] Matriz de Recursos: Definir quais recursos são obrigatórios para cada disciplina.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 1,
+      "module": "Gestão Pedagógica e Demanda",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    }
+  ],
+  "nonFunctional": [
+    {
+      "id": "NFR-1",
+      "category": "performance",
+      "description": "Tempo de resposta do login via SSO: Tempo máximo de resposta para autenticação via SSO deve ser menor que 2 segundos para garantir boa experiência do usuário.",
+      "metric": "response_time < 2000ms"
+    },
+    {
+      "id": "NFR-2",
+      "category": "performance",
+      "description": "Entrega de notificações críticas: Notificações críticas via SMS ou WhatsApp devem ser entregues em até 1 minuto após o disparo para garantir comunicação eficaz.",
+      "metric": "delivery_time <= 1min"
+    },
+    {
+      "id": "NFR-3",
+      "category": "performance",
+      "description": "Tempo de Resposta para Operações CRUD: Operações de cadastro, edição e exclusão devem ter tempo de resposta inferior a 200 milissegundos.",
+      "metric": "response_time < 200ms"
+    },
+    {
+      "id": "NFR-4",
+      "category": "performance",
+      "description": "Tempo Máximo de Execução do Algoritmo de Alocação: O algoritmo deve concluir a alocação para instituições de grande porte em até 2 minutos.",
+      "metric": "execution_time < 2 minutos"
+    },
+    {
+      "id": "NFR-5",
+      "category": "performance",
+      "description": "Suporte a Usuários Simultâneos: O sistema deve suportar pelo menos 500 usuários acessando simultaneamente em picos.",
+      "metric": "concurrent_users >= 500"
+    },
+    {
+      "id": "NFR-6",
+      "category": "reliability",
+      "description": "Disponibilidade do Sistema: O sistema deve garantir alta disponibilidade, especialmente em períodos críticos de planejamento.",
+      "metric": "uptime >= 99.9%"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "CON-1",
+      "type": "technical",
+      "description": "Tempo de resposta do login via SSO: Tempo máximo de resposta para autenticação via SSO deve ser menor que 2 segundos para garantir boa experiência do usuário.",
+      "impact": "Métrica: response_time < 2000ms"
+    },
+    {
+      "id": "CON-2",
+      "type": "technical",
+      "description": "Entrega de notificações críticas: Notificações críticas via SMS ou WhatsApp devem ser entregues em até 1 minuto após o disparo para garantir comunicação eficaz.",
+      "impact": "Métrica: delivery_time <= 1min"
+    },
+    {
+      "id": "CON-3",
+      "type": "technical",
+      "description": "Tempo de Resposta para Operações CRUD: Operações de cadastro, edição e exclusão devem ter tempo de resposta inferior a 200 milissegundos.",
+      "impact": "Métrica: response_time < 200ms"
+    },
+    {
+      "id": "CON-4",
+      "type": "technical",
+      "description": "Tempo Máximo de Execução do Algoritmo de Alocação: O algoritmo deve concluir a alocação para instituições de grande porte em até 2 minutos.",
+      "impact": "Métrica: execution_time < 2 minutos"
+    },
+    {
+      "id": "CON-5",
+      "type": "technical",
+      "description": "Suporte a Usuários Simultâneos: O sistema deve suportar pelo menos 500 usuários acessando simultaneamente em picos.",
+      "impact": "Métrica: concurrent_users >= 500"
+    },
+    {
+      "id": "CON-6",
+      "type": "technical",
+      "description": "Disponibilidade do Sistema: O sistema deve garantir alta disponibilidade, especialmente em períodos críticos de planejamento.",
+      "impact": "Métrica: uptime >= 99.9%"
+    },
+    {
+      "id": "CON-7",
+      "type": "technical",
+      "description": "Segurança de Dados: Criptografia AES-256 em repouso, comunicação via TLS 1.3, autenticação MFA obrigatória para perfis administrativos e gestores."
+    }
+  ],
+  "assumptions": [],
+  "domainModel": [
+    {
+      "id": "DM-1",
+      "entity": "Disciplina",
+      "description": "Disciplinas ofertadas nos cursos, com requisitos de recursos e carga horária",
+      "attributes": [
+        "id: text",
+        "nome: text",
+        "cargaHoraria: number",
+        "requisitosRecursos: list"
+      ],
+      "relationships": [
+        "Uma disciplina pertence a um curso e pode requerer vários recursos → Curso",
+        "Uma disciplina pertence a um curso e pode requerer vários recursos → Recurso"
+      ]
+    },
+    {
+      "id": "DM-2",
+      "entity": "Pessoa",
+      "description": "Dados cadastrais de docentes e alunos, com competências e disponibilidades para docentes",
+      "attributes": [
+        "id: text",
+        "nome: text",
+        "perfil: select",
+        "competencias: list",
+        "disponibilidade: list"
+      ],
+      "relationships": [
+        "Uma pessoa pode estar vinculada a várias disciplinas → Disciplina"
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "id": "INT-1",
+      "trigger": "Tela: Formulário de Cadastro de Pessoas (Docentes, Alunos)",
+      "flow": "Tela para criar e editar dados de pessoas, incluindo competências e disponibilidades para docentes",
+      "description": "Tela para criar e editar dados de pessoas, incluindo competências e disponibilidades para docentes",
+      "module": "Gestão Pedagógica e Demanda"
+    },
+    {
+      "id": "INT-2",
+      "trigger": "Definição de Requisitos para Disciplina",
+      "flow": "Coordenador acessa a matriz curricular e seleciona uma disciplina → Coordenador marca recursos obrigatórios e desejáveis em uma lista → Coordenador escolhe aplicar alterações para novas turmas ou também para turmas em andamento → Sistema alerta sobre turmas atuais que poderão ficar desalocadas → Coordenador confirma a atualização da matriz de requisitos",
+      "description": "Definição de Requisitos para Disciplina",
+      "module": "Gestão Pedagógica e Demanda"
+    }
+  ],
+  "edgeCases": [
+    {
+      "id": "EC-1",
+      "scenario": "Alteração conflita com turmas em andamento",
+      "handling": "Atualização dos requisitos gera desalocação ou conflitos em turmas já em andamento, exigindo intervenção do coordenador",
+      "severity": "high"
+    }
+  ],
+  "terminology": [
+    {
+      "term": "Planejamento Inteligente",
+      "definition": "Módulo central do sistema que cruza demandas pedagógicas com disponibilidade física e recursos para sugerir a melhor alocação de salas e horários, prevendo conflitos e garantindo otimização.",
+      "aliases": [
+        "Alocação automática",
+        "Distribuição de Ofertas"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [],
+  "openQuestions": [],
+  "schema": "-- ==========================================================\n-- WARNING: Auto-generated schema. Review before using in production.\n-- ==========================================================\n-- Generated by IdeiaEstruturada from Idea Pack\n-- Project: Gestão Pedagógica — Gestão Pedagógica e Demanda\n-- Generated at: 2026-03-15T18:37:54.490Z\n-- Entities: 2\n-- ==========================================================\n\n-- Trigger function for updated_at\nCREATE OR REPLACE FUNCTION trigger_set_updated_at()\nRETURNS TRIGGER AS $$\nBEGIN\n  NEW.updated_at = now();\n  RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;\n\n-- ============================================\n-- Table: disciplinas (from Entity: Disciplina)\n-- Disciplinas ofertadas nos cursos, com requisitos de recursos e carga horária\n-- ============================================\nCREATE TABLE IF NOT EXISTS disciplinas (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  pessoa_id UUID NOT NULL REFERENCES pessoas(id) ON DELETE CASCADE,\n  nome TEXT NOT NULL -- Nome da disciplina,\n  carga_horaria NUMERIC NOT NULL -- Carga horária total,\n  requisitos_recursos JSONB DEFAULT '[]' -- Lista de recursos obrigatórios para a disciplina,\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()\n);\n\nCREATE INDEX IF NOT EXISTS idx_disciplinas_pessoa ON disciplinas(pessoa_id);\n\nCREATE TRIGGER set_disciplinas_updated_at\n  BEFORE UPDATE ON disciplinas\n  FOR EACH ROW\n  EXECUTE FUNCTION trigger_set_updated_at();\n\n-- ============================================\n-- Table: pessoas (from Entity: Pessoa)\n-- Dados cadastrais de docentes e alunos, com competências e disponibilidades para docentes\n-- ============================================\nCREATE TABLE IF NOT EXISTS pessoas (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  nome TEXT NOT NULL -- Nome completo,\n  perfil TEXT NOT NULL -- Perfil do usuário (docente, aluno, coordenador, etc.),\n  competencias JSONB DEFAULT '[]' -- Competências para docentes,\n  disponibilidade JSONB DEFAULT '[]' -- Horários disponíveis para docentes,\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()\n);\n\nCREATE TRIGGER set_pessoas_updated_at\n  BEFORE UPDATE ON pessoas\n  FOR EACH ROW\n  EXECUTE FUNCTION trigger_set_updated_at();\n\n\n-- ============================================\n-- WARNINGS — Missing Entity References\n-- ============================================\n-- ⚠️ Entity \"Disciplina\" references \"Curso\" but \"Curso\" is not defined as an Entity in the scope. Create this entity or remove the relationship.\n-- ⚠️ Entity \"Disciplina\" references \"Recurso\" but \"Recurso\" is not defined as an Entity in the scope. Create this entity or remove the relationship.\n-- Fix: Create the missing entities in the discovery or remove the relationships.\n",
+  "apiRoutes": [
+    {
+      "method": "GET",
+      "path": "/api/gestao-pedagogica-demandas",
+      "description": "List gestao pedagogica demandas",
+      "module": "Gestão Pedagógica e Demanda",
+      "flowName": "Definição de Requisitos para Disciplina",
+      "auth": true,
+      "responseBody": "Disciplina"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/gestao-pedagogica-demandas/:id",
+      "description": "Update gestao pedagogica demandas",
+      "module": "Gestão Pedagógica e Demanda",
+      "flowName": "Definição de Requisitos para Disciplina",
+      "auth": true,
+      "requestBody": {
+        "id": "text",
+        "nome": "text",
+        "cargaHoraria": "number",
+        "requisitosRecursos": "list"
+      }
+    }
+  ],
+  "apiRoutesText": "# API Routes\n\n> Auto-generated by IdeiaEstruturada at 2026-03-15T18:37:54.495Z\n> WARNING: Review before using in production.\n\nTotal routes: 2\n\n## Gestão Pedagógica e Demanda\n_Módulo para cadastro de cursos, disciplinas, matrizes de recursos, perfis de alunos e docentes, e agrupamento de turmas para cálculo de lotação._\n\n| Method | Path | Description | Auth |\n|--------|------|-------------|------|\n| GET    | `/api/gestao-pedagogica-demandas` | List gestao pedagogica demandas | Yes |\n| PUT    | `/api/gestao-pedagogica-demandas/:id` | Update gestao pedagogica demandas | Yes |\n",
+  "navigation": {
+    "style": "sidebar",
+    "position": "left",
+    "collapsible": true,
+    "items": [
+      {
+        "label": "Dashboard",
+        "icon": "LayoutDashboard",
+        "path": "/dashboard"
+      },
+      {
+        "label": "Gestão Pedagógica e Demanda",
+        "icon": "Box",
+        "path": "/gestao-pedagogica-e-demanda"
+      }
+    ],
+    "footer": {
+      "showVersion": true,
+      "showUser": true
+    }
+  },
+  "buildSystem": {
+    "versionFormat": "YYYYMMDD.HHmm",
+    "changelog": true,
+    "changelogLocation": "/changelog",
+    "buildBadge": true,
+    "buildBadgeLocation": "sidebar-footer"
+  },
+  "metadata": {
+    "totalScopeItems": 17,
+    "classificationBreakdown": {
+      "HYPOTHESIS": 17
+    },
+    "layersCovered": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      7
+    ],
+    "generatedAt": "2026-03-15T18:37:54.496Z",
+    "locale": "pt-BR",
+    "visualIdentity": {
+      "fonts": {
+        "body": "Inter",
+        "heading": "Space Grotesk"
+      },
+      "colors": {
+        "text": "#0a0a0a",
+        "accent": "#ff3d00",
+        "primary": "#000000",
+        "surface": "#ffffff",
+        "textMuted": "#737373",
+        "accentLight": "#fff3f0",
+        "surfaceDark": "#0a0a0a",
+        "primaryLight": "#f5f5f5"
+      },
+      "preset": "minimal"
+    },
+    "module": "Gestão Pedagógica e Demanda"
+  }
+}
