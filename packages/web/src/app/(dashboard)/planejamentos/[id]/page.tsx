@@ -5,6 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { toast } from "@/components/ui/toast";
+import { confirm } from "@/components/ui/confirm-dialog";
 import type { Planejamento } from "@/types/database";
 
 interface AlocacaoWithJoins {
@@ -91,15 +93,21 @@ export default function PlanejamentoDetailPage() {
         throw new Error(body.error || "Erro ao executar alocacao");
       }
       await fetchAll();
+      toast("Alocacao executada com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao executar");
+      toast(err instanceof Error ? err.message : "Erro ao executar", "error");
     } finally {
       setExecuting(false);
     }
   };
 
   const handlePublicar = async () => {
-    if (!window.confirm("Publicar este planejamento? Esta acao nao pode ser desfeita.")) return;
+    const ok = await confirm({
+      message: "Publicar este planejamento? Esta acao nao pode ser desfeita.",
+      confirmLabel: "Publicar",
+      variant: "primary",
+    });
+    if (!ok) return;
     setPublishing(true);
     try {
       const res = await fetch(`/api/planejamentos/${id}/publicar`, {
@@ -110,8 +118,9 @@ export default function PlanejamentoDetailPage() {
         throw new Error(body.error || "Erro ao publicar");
       }
       await fetchAll();
+      toast("Planejamento publicado com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao publicar");
+      toast(err instanceof Error ? err.message : "Erro ao publicar", "error");
     } finally {
       setPublishing(false);
     }

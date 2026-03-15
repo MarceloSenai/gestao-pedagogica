@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createNotification } from "@/lib/notifications/create";
 
 export async function PATCH(
   _request: NextRequest,
@@ -36,5 +37,14 @@ export async function PATCH(
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await createNotification(supabase, {
+    tipo: "sistema",
+    titulo: "Planejamento publicado",
+    mensagem: `O planejamento ${(data as { semestre: string }).semestre}/${(data as { ano: number }).ano} foi publicado com sucesso.`,
+    referencia_tipo: "planejamento",
+    referencia_id: id,
+  });
+
   return NextResponse.json(data);
 }

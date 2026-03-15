@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import type { Column } from "@/components/ui/data-table";
 import { FormField } from "@/components/ui/form-field";
 import { Modal } from "@/components/ui/modal";
+import { toast } from "@/components/ui/toast";
+import { confirm } from "@/components/ui/confirm-dialog";
 import type { Disciplina, DisciplinaInsert, Curso, Recurso } from "@/types/database";
 
 interface RequisitoItem {
@@ -108,13 +110,15 @@ function DisciplinasPage() {
 
   const handleDelete = async (id: string) => {
     const item = data.find((d) => d.id === id);
-    if (!window.confirm(`Excluir disciplina "${item?.nome ?? id}"?`)) return;
+    const ok = await confirm({ message: `Excluir disciplina "${item?.nome ?? id}"?`, confirmLabel: "Excluir" });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/disciplinas/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Erro ao excluir");
       await fetchData();
+      toast("Disciplina excluída com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao excluir");
+      toast(err instanceof Error ? err.message : "Erro ao excluir", "error");
     }
   };
 
@@ -138,8 +142,9 @@ function DisciplinasPage() {
       if (!res.ok) throw new Error("Erro ao salvar");
       setModalOpen(false);
       await fetchData();
+      toast("Disciplina salva com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao salvar");
+      toast(err instanceof Error ? err.message : "Erro ao salvar", "error");
     } finally {
       setSaving(false);
     }
@@ -182,8 +187,9 @@ function DisciplinasPage() {
       if (!res.ok) throw new Error("Erro ao salvar requisitos");
       setReqModalOpen(false);
       await fetchData();
+      toast("Requisitos salvos com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao salvar requisitos");
+      toast(err instanceof Error ? err.message : "Erro ao salvar requisitos", "error");
     } finally {
       setSavingReq(false);
     }

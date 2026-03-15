@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Modal } from "@/components/ui/modal";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { toast } from "@/components/ui/toast";
+import { confirm } from "@/components/ui/confirm-dialog";
 import type { Planejamento } from "@/types/database";
 
 export default function PlanejamentosPage() {
@@ -48,15 +50,17 @@ export default function PlanejamentosPage() {
       setModalOpen(false);
       setForm({ semestre: "", ano: new Date().getFullYear() });
       await fetchData();
+      toast("Planejamento criado com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao salvar");
+      toast(err instanceof Error ? err.message : "Erro ao salvar", "error");
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Excluir este planejamento?")) return;
+    const ok = await confirm({ message: "Excluir este planejamento?", confirmLabel: "Excluir" });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/planejamentos/${id}`, { method: "DELETE" });
       if (!res.ok) {
@@ -64,8 +68,9 @@ export default function PlanejamentosPage() {
         throw new Error(body.error || "Erro ao excluir");
       }
       await fetchData();
+      toast("Planejamento excluído com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao excluir");
+      toast(err instanceof Error ? err.message : "Erro ao excluir", "error");
     }
   };
 

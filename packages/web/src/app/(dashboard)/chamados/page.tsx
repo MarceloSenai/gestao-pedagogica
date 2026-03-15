@@ -6,6 +6,8 @@ import { DataTable, type Column } from "@/components/ui/data-table";
 import { FormField } from "@/components/ui/form-field";
 import { Modal } from "@/components/ui/modal";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { toast } from "@/components/ui/toast";
+import { confirm } from "@/components/ui/confirm-dialog";
 import type {
   Chamado,
   ChamadoInsert,
@@ -122,13 +124,15 @@ export default function ChamadosPage() {
 
   const handleDelete = async (id: string) => {
     const item = data.find((d) => d.id === id);
-    if (!window.confirm(`Excluir chamado "${item?.titulo ?? id}"?`)) return;
+    const ok = await confirm({ message: `Excluir chamado "${item?.titulo ?? id}"?`, confirmLabel: "Excluir" });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/chamados/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Erro ao excluir");
       await fetchData();
+      toast("Chamado excluído com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao excluir");
+      toast(err instanceof Error ? err.message : "Erro ao excluir", "error");
     }
   };
 
@@ -161,8 +165,9 @@ export default function ChamadosPage() {
       }
       setModalOpen(false);
       await fetchData();
+      toast("Chamado salvo com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao salvar");
+      toast(err instanceof Error ? err.message : "Erro ao salvar", "error");
     } finally {
       setSaving(false);
     }

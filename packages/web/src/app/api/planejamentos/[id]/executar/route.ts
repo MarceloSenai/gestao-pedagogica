@@ -5,6 +5,7 @@ import {
   type TurmaInput,
   type AmbienteInput,
 } from "@/lib/allocation/engine";
+import { createNotification } from "@/lib/notifications/create";
 import type {
   Planejamento,
   Turma,
@@ -163,6 +164,18 @@ export async function POST(
   const naoAlocadas = results.filter((r) => r.status === "nao_alocada").length;
   const conflitos = results.filter((r) => r.status === "conflito").length;
 
+  const taxaSucesso = results.length > 0
+    ? Math.round((alocadas / results.length) * 100)
+    : 0;
+
+  await createNotification(supabase, {
+    tipo: conflitos > 0 ? "conflito" : "info",
+    titulo: "Alocação executada",
+    mensagem: `Planejamento ${planejamento.semestre}/${planejamento.ano}: ${alocadas} alocadas, ${naoAlocadas} não alocadas, ${conflitos} conflitos (${taxaSucesso}% sucesso)`,
+    referencia_tipo: "planejamento",
+    referencia_id: id,
+  });
+
   return NextResponse.json({
     results,
     summary: {
@@ -170,9 +183,7 @@ export async function POST(
       alocadas,
       nao_alocadas: naoAlocadas,
       conflitos,
-      taxa_sucesso: results.length > 0
-        ? Math.round((alocadas / results.length) * 100)
-        : 0,
+      taxa_sucesso: taxaSucesso,
     },
   });
 }

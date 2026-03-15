@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createNotification } from "@/lib/notifications/create";
 
 export async function GET(request: NextRequest) {
   const supabase = await createServerSupabaseClient();
@@ -71,5 +72,14 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await createNotification(supabase, {
+    tipo: "alerta",
+    titulo: "Novo chamado criado",
+    mensagem: `Chamado "${body.titulo}" (prioridade: ${body.prioridade ?? "media"})`,
+    referencia_tipo: "chamado",
+    referencia_id: (data as { id: string }).id,
+  });
+
   return NextResponse.json(data, { status: 201 });
 }

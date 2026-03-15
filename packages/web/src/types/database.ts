@@ -464,6 +464,38 @@ export interface Database {
         };
         Relationships: [];
       };
+      notificacoes: {
+        Row: {
+          id: string;
+          tipo: string;
+          titulo: string;
+          mensagem: string;
+          destinatario_id: string | null;
+          referencia_tipo: string | null;
+          referencia_id: string | null;
+          lida: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          tipo: string;
+          titulo: string;
+          mensagem: string;
+          destinatario_id?: string | null;
+          referencia_tipo?: string | null;
+          referencia_id?: string | null;
+          lida?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          tipo?: string;
+          titulo?: string;
+          mensagem?: string;
+          destinatario_id?: string | null;
+          lida?: boolean;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -537,3 +569,7 @@ export type RecursoStatus = "disponivel" | "em_uso" | "em_manutencao" | "indispo
 export type ChamadoTipo = "ambiente" | "recurso";
 export type ChamadoPrioridade = "baixa" | "media" | "alta" | "urgente";
 export type ChamadoStatus = "aberto" | "em_andamento" | "resolvido";
+
+export type Notificacao = Database["public"]["Tables"]["notificacoes"]["Row"];
+export type NotificacaoInsert = Database["public"]["Tables"]["notificacoes"]["Insert"];
+export type NotificacaoTipo = "info" | "alerta" | "conflito" | "sistema";

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import type { Column } from "@/components/ui/data-table";
 import { FormField } from "@/components/ui/form-field";
 import { Modal } from "@/components/ui/modal";
+import { toast } from "@/components/ui/toast";
+import { confirm } from "@/components/ui/confirm-dialog";
 import type {
   Turma,
   TurmaInsert,
@@ -129,18 +131,18 @@ export default function TurmasPage() {
   const handleDelete = async (id: string) => {
     const item = data.find((t) => t.id === id);
     const disc = item ? discMap[item.disciplina_id] : null;
-    if (
-      !window.confirm(
-        `Excluir turma "${disc?.nome ?? ""} - ${item?.semestre ?? id}"?`
-      )
-    )
-      return;
+    const ok = await confirm({
+      message: `Excluir turma "${disc?.nome ?? ""} - ${item?.semestre ?? id}"?`,
+      confirmLabel: "Excluir",
+    });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/turmas/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Erro ao excluir");
       await fetchData();
+      toast("Turma excluída com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao excluir");
+      toast(err instanceof Error ? err.message : "Erro ao excluir", "error");
     }
   };
 
@@ -165,8 +167,9 @@ export default function TurmasPage() {
       if (!res.ok) throw new Error("Erro ao salvar");
       setModalOpen(false);
       await fetchData();
+      toast("Turma salva com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao salvar");
+      toast(err instanceof Error ? err.message : "Erro ao salvar", "error");
     } finally {
       setSaving(false);
     }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { ToastContainer } from "@/components/ui/toast";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import "./globals.css";
 
 const inter = Inter({
@@ -28,6 +30,8 @@ export default function RootLayout({
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
       >
         {children}
+        <ToastContainer />
+        <ConfirmDialog />
       </body>
     </html>
   );

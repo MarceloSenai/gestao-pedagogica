@@ -6,6 +6,8 @@ import { DataTable, type Column } from "@/components/ui/data-table";
 import { FormField } from "@/components/ui/form-field";
 import { Modal } from "@/components/ui/modal";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { toast } from "@/components/ui/toast";
+import { confirm } from "@/components/ui/confirm-dialog";
 import type { Recurso, RecursoInsert } from "@/types/database";
 
 const emptyForm: RecursoInsert = { nome: "", quantidade: 0 };
@@ -53,13 +55,15 @@ export default function RecursosPage() {
 
   const handleDelete = async (id: string) => {
     const item = data.find((d) => d.id === id);
-    if (!window.confirm(`Excluir recurso "${item?.nome ?? id}"?`)) return;
+    const ok = await confirm({ message: `Excluir recurso "${item?.nome ?? id}"?`, confirmLabel: "Excluir" });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/recursos/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Erro ao excluir");
       await fetchData();
+      toast("Recurso excluído com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao excluir");
+      toast(err instanceof Error ? err.message : "Erro ao excluir", "error");
     }
   };
 
@@ -77,8 +81,9 @@ export default function RecursosPage() {
       if (!res.ok) throw new Error("Erro ao salvar");
       setModalOpen(false);
       await fetchData();
+      toast("Recurso salvo com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao salvar");
+      toast(err instanceof Error ? err.message : "Erro ao salvar", "error");
     } finally {
       setSaving(false);
     }

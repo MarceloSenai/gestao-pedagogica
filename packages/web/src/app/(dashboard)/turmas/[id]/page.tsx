@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { FormField } from "@/components/ui/form-field";
 import { Modal } from "@/components/ui/modal";
+import { toast } from "@/components/ui/toast";
+import { confirm } from "@/components/ui/confirm-dialog";
 import type {
   Turma,
   TurmasTurno,
@@ -114,8 +116,9 @@ export default function TurmaDetailPage() {
       setMatriculaModalOpen(false);
       setSelectedAlunoId("");
       await fetchTurma();
+      toast("Aluno matriculado com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao matricular");
+      toast(err instanceof Error ? err.message : "Erro ao matricular", "error");
     } finally {
       setSaving(false);
     }
@@ -123,15 +126,17 @@ export default function TurmaDetailPage() {
 
   const handleDesmatricular = async (alunoId: string) => {
     const aluno = alunos.find((a) => a.id === alunoId);
-    if (!window.confirm(`Desmatricular "${aluno?.nome ?? alunoId}"?`)) return;
+    const ok = await confirm({ message: `Desmatricular "${aluno?.nome ?? alunoId}"?`, confirmLabel: "Desmatricular" });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/turmas/${turmaId}/alunos?aluno_id=${alunoId}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Erro ao desmatricular");
       await fetchTurma();
+      toast("Aluno desmatriculado com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao desmatricular");
+      toast(err instanceof Error ? err.message : "Erro ao desmatricular", "error");
     }
   };
 

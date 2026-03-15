@@ -8,6 +8,8 @@ import { FormField } from "@/components/ui/form-field";
 import { Modal } from "@/components/ui/modal";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { TreeView, type TreeNode } from "@/components/ui/tree-view";
+import { toast } from "@/components/ui/toast";
+import { confirm } from "@/components/ui/confirm-dialog";
 import type { Ambiente, AmbienteInsert, AmbienteTipo, Predio } from "@/types/database";
 
 const tipoOptions: { value: AmbienteTipo; label: string }[] = [
@@ -123,13 +125,15 @@ function AmbientesPage() {
 
   const handleDelete = async (id: string) => {
     const item = data.find((d) => d.id === id);
-    if (!window.confirm(`Excluir ambiente "${item?.nome ?? id}"?`)) return;
+    const ok = await confirm({ message: `Excluir ambiente "${item?.nome ?? id}"?`, confirmLabel: "Excluir" });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/ambientes/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Erro ao excluir");
       await fetchData();
+      toast("Ambiente excluído com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao excluir");
+      toast(err instanceof Error ? err.message : "Erro ao excluir", "error");
     }
   };
 
@@ -147,8 +151,9 @@ function AmbientesPage() {
       if (!res.ok) throw new Error("Erro ao salvar");
       setModalOpen(false);
       await fetchData();
+      toast("Ambiente salvo com sucesso", "success");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao salvar");
+      toast(err instanceof Error ? err.message : "Erro ao salvar", "error");
     } finally {
       setSaving(false);
     }
