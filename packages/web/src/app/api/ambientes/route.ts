@@ -5,10 +5,15 @@ export async function GET(request: NextRequest) {
   const supabase = await createServerSupabaseClient();
   const predioId = request.nextUrl.searchParams.get("predio_id");
 
+  const status = request.nextUrl.searchParams.get("status");
+
   let query = supabase.from("ambientes").select("*, predios(nome)").order("nome");
 
   if (predioId) {
     query = query.eq("predio_id", predioId);
+  }
+  if (status) {
+    query = query.eq("status", status);
   }
 
   const { data, error } = await query;

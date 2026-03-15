@@ -47,6 +47,7 @@ export interface Database {
           nome: string;
           tipo: string;
           capacidade: number | null;
+          status: string;
           created_at: string;
           updated_at: string;
         };
@@ -56,6 +57,7 @@ export interface Database {
           nome: string;
           tipo: string;
           capacidade?: number | null;
+          status?: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -65,6 +67,7 @@ export interface Database {
           nome?: string;
           tipo?: string;
           capacidade?: number | null;
+          status?: string;
           updated_at?: string;
         };
         Relationships: [
@@ -82,6 +85,7 @@ export interface Database {
           id: string;
           nome: string;
           quantidade: number;
+          status: string;
           created_at: string;
           updated_at: string;
         };
@@ -89,6 +93,7 @@ export interface Database {
           id?: string;
           nome: string;
           quantidade: number;
+          status?: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -96,6 +101,7 @@ export interface Database {
           id?: string;
           nome?: string;
           quantidade?: number;
+          status?: string;
           updated_at?: string;
         };
         Relationships: [];
@@ -340,6 +346,44 @@ export interface Database {
           },
         ];
       };
+      chamados: {
+        Row: {
+          id: string;
+          tipo: string;
+          referencia_id: string;
+          titulo: string;
+          descricao: string | null;
+          prioridade: string;
+          status: string;
+          comentario_resolucao: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tipo: string;
+          referencia_id: string;
+          titulo: string;
+          descricao?: string | null;
+          prioridade?: string;
+          status?: string;
+          comentario_resolucao?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tipo?: string;
+          referencia_id?: string;
+          titulo?: string;
+          descricao?: string | null;
+          prioridade?: string;
+          status?: string;
+          comentario_resolucao?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -393,3 +437,13 @@ export type Matricula = Database["public"]["Tables"]["matriculas"]["Row"];
 export type MatriculaInsert = Database["public"]["Tables"]["matriculas"]["Insert"];
 
 export type TurmasTurno = "manha" | "tarde" | "noite";
+
+export type Chamado = Database["public"]["Tables"]["chamados"]["Row"];
+export type ChamadoInsert = Database["public"]["Tables"]["chamados"]["Insert"];
+export type ChamadoUpdate = Database["public"]["Tables"]["chamados"]["Update"];
+
+export type AmbienteStatus = "ativo" | "em_manutencao" | "desativado";
+export type RecursoStatus = "disponivel" | "em_uso" | "em_manutencao" | "indisponivel";
+export type ChamadoTipo = "ambiente" | "recurso";
+export type ChamadoPrioridade = "baixa" | "media" | "alta" | "urgente";
+export type ChamadoStatus = "aberto" | "em_andamento" | "resolvido";

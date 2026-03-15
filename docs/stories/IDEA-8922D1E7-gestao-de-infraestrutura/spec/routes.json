@@ -1,0 +1,28 @@
+[
+  {
+    "method": "POST",
+    "path": "/api/gestao-infraestruturas",
+    "description": "Create gestao infraestruturas",
+    "module": "Gestão de Infraestrutura",
+    "flowName": "Cadastro de Recurso",
+    "auth": true,
+    "requestBody": {
+      "id": "text",
+      "nome": "text",
+      "quantidade": "number"
+    }
+  },
+  {
+    "method": "PUT",
+    "path": "/api/gestao-infraestruturas/:id",
+    "description": "Update gestao infraestruturas",
+    "module": "Gestão de Infraestrutura",
+    "flowName": "Cadastro de Recurso",
+    "auth": true,
+    "requestBody": {
+      "id": "text",
+      "nome": "text",
+      "quantidade": "number"
+    }
+  }
+]

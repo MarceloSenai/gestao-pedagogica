@@ -17,6 +17,7 @@ const entities: { label: string; href: string; endpoint: string }[] = [
   { label: "Disciplinas", href: "/disciplinas", endpoint: "/api/disciplinas" },
   { label: "Pessoas", href: "/pessoas", endpoint: "/api/pessoas" },
   { label: "Turmas", href: "/turmas", endpoint: "/api/turmas" },
+  { label: "Chamados", href: "/chamados", endpoint: "/api/chamados" },
 ];
 
 export default function DashboardPage() {

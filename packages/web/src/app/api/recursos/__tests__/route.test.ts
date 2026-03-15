@@ -39,7 +39,8 @@ describe("GET /api/recursos", () => {
     ];
     chainMock = createChainMock(recursos);
 
-    const response = await GET();
+    const request = new NextRequest("http://localhost/api/recursos");
+    const response = await GET(request);
     const json = await response.json();
 
     expect(response.status).toBe(200);
@@ -50,7 +51,8 @@ describe("GET /api/recursos", () => {
   it("returns 500 on Supabase error", async () => {
     chainMock = createChainMock(null, { message: "DB error" });
 
-    const response = await GET();
+    const request = new NextRequest("http://localhost/api/recursos");
+    const response = await GET(request);
     const json = await response.json();
 
     expect(response.status).toBe(500);

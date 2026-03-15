@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { DataTable, type Column } from "@/components/ui/data-table";
 import { FormField } from "@/components/ui/form-field";
 import { Modal } from "@/components/ui/modal";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { TreeView, type TreeNode } from "@/components/ui/tree-view";
 import type { Ambiente, AmbienteInsert, AmbienteTipo, Predio } from "@/types/database";
 
@@ -42,6 +43,7 @@ function AmbientesPage() {
   const [form, setForm] = useState<AmbienteInsert>({ ...emptyForm });
   const [saving, setSaving] = useState(false);
   const [filtroPredioid, setFiltroPredioid] = useState("");
+  const [filtroStatus, setFiltroStatus] = useState("");
   const [viewMode, setViewMode] = useState<"list" | "tree">("list");
   const [urlParamApplied, setUrlParamApplied] = useState(false);
 
@@ -96,9 +98,11 @@ function AmbientesPage() {
   const predioMap = Object.fromEntries(predios.map((p) => [p.id, p.nome]));
   const predioOptions = predios.map((p) => ({ value: p.id, label: p.nome }));
 
-  const filteredData = filtroPredioid
-    ? data.filter((a) => a.predio_id === filtroPredioid)
-    : data;
+  const filteredData = data.filter((a) => {
+    if (filtroPredioid && a.predio_id !== filtroPredioid) return false;
+    if (filtroStatus && (a.status ?? "ativo") !== filtroStatus) return false;
+    return true;
+  });
 
   const openCreate = () => {
     setEditing(null);
@@ -164,6 +168,13 @@ function AmbientesPage() {
       label: "Prédio",
       render: (_v, item) => predioMap[item.predio_id] ?? "—",
     },
+    {
+      key: "status",
+      label: "Status",
+      render: (_v, item) => (
+        <StatusBadge status={item.status ?? "ativo"} variant="ambiente" />
+      ),
+    },
   ];
 
   if (loading) return <div className="space-y-3"><div className="h-8 w-48 animate-pulse rounded bg-[var(--color-primary-light)]" /><div className="h-64 animate-pulse rounded-lg bg-[var(--color-primary-light)]" /></div>;
@@ -194,6 +205,21 @@ function AmbientesPage() {
                 {p.nome}
               </option>
             ))}
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-sm font-medium text-gray-700">
+            Status:
+          </label>
+          <select
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm"
+            value={filtroStatus}
+            onChange={(e) => setFiltroStatus(e.target.value)}
+          >
+            <option value="">Todos</option>
+            <option value="ativo">Ativo</option>
+            <option value="em_manutencao">Manutenção</option>
+            <option value="desativado">Desativado</option>
           </select>
         </div>
         <div className="flex items-center gap-1 rounded-md border border-gray-300 p-0.5">

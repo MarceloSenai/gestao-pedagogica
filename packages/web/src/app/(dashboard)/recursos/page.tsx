@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTable, type Column } from "@/components/ui/data-table";
 import { FormField } from "@/components/ui/form-field";
 import { Modal } from "@/components/ui/modal";
+import { StatusBadge } from "@/components/ui/status-badge";
 import type { Recurso, RecursoInsert } from "@/types/database";
 
 const emptyForm: RecursoInsert = { nome: "", quantidade: 0 };
@@ -17,6 +18,7 @@ export default function RecursosPage() {
   const [editing, setEditing] = useState<Recurso | null>(null);
   const [form, setForm] = useState<RecursoInsert>({ ...emptyForm });
   const [saving, setSaving] = useState(false);
+  const [filtroStatus, setFiltroStatus] = useState("");
 
   const fetchData = async () => {
     setLoading(true);
@@ -82,9 +84,21 @@ export default function RecursosPage() {
     }
   };
 
-  const columns = [
-    { key: "nome" as const, label: "Nome" },
-    { key: "quantidade" as const, label: "Quantidade" },
+  const filteredData = data.filter((r) => {
+    if (filtroStatus && (r.status ?? "disponivel") !== filtroStatus) return false;
+    return true;
+  });
+
+  const columns: Column<Recurso>[] = [
+    { key: "nome", label: "Nome" },
+    { key: "quantidade", label: "Quantidade" },
+    {
+      key: "status",
+      label: "Status",
+      render: (_v, item) => (
+        <StatusBadge status={item.status ?? "disponivel"} variant="recurso" />
+      ),
+    },
   ];
 
   if (loading) return <div className="space-y-3"><div className="h-8 w-48 animate-pulse rounded bg-[var(--color-primary-light)]" /><div className="h-64 animate-pulse rounded-lg bg-[var(--color-primary-light)]" /></div>;
@@ -99,9 +113,26 @@ export default function RecursosPage() {
         </Button>
       </div>
 
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <label className="text-sm font-medium text-gray-700">Status:</label>
+          <select
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm"
+            value={filtroStatus}
+            onChange={(e) => setFiltroStatus(e.target.value)}
+          >
+            <option value="">Todos</option>
+            <option value="disponivel">Disponível</option>
+            <option value="em_uso">Em Uso</option>
+            <option value="em_manutencao">Manutenção</option>
+            <option value="indisponivel">Indisponível</option>
+          </select>
+        </div>
+      </div>
+
       <DataTable<Recurso>
         columns={columns}
-        data={data}
+        data={filteredData}
         onEdit={openEdit}
         onDelete={handleDelete}
       />

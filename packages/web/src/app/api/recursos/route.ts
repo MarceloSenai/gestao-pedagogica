@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const supabase = await createServerSupabaseClient();
+  const status = request.nextUrl.searchParams.get("status");
 
-  const { data, error } = await supabase
-    .from("recursos")
-    .select("*")
-    .order("nome");
+  let query = supabase.from("recursos").select("*").order("nome");
+
+  if (status) {
+    query = query.eq("status", status);
+  }
+
+  const { data, error } = await query;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data);

@@ -1,0 +1,239 @@
+{
+  "storyId": "IDEA-8922D1E7-gestao-de-identidade-e-acessos-iam",
+  "gatheredAt": "2026-03-15T21:56:08.399Z",
+  "source": "idea-pack",
+  "gatheredBy": "@idea-estruturada",
+  "elicitationVersion": "2.0",
+  "projectTitle": "Gestão Pedagógica",
+  "projectId": "8922d1e7-a231-469f-8539-2ef53fcf89b5",
+  "functional": [
+    {
+      "id": "FR-1",
+      "description": "EduResource automatiza a logística de uso dos espaços escolares, garantindo ambientes adequados com recursos necessários para cada disciplina, otimizando custos e melhorando a qualidade pedagógica.",
+      "priority": "P0",
+      "rationale": "Core product vision",
+      "sourceType": "VISION",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-2",
+      "description": "Sistema inteligente para otimizar a infraestrutura física e pedagógica de unidades escolares, automatizando a logística de uso de espaços e recursos para garantir uso eficiente e qualidade pedagógica.",
+      "priority": "P0",
+      "rationale": "Core product vision",
+      "sourceType": "VISION",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-3",
+      "description": "[Módulo] Gestão de Identidade e Acessos (IAM): Gerencia autenticação, controle de acesso baseado em papéis (RBAC), logs de sessão e delegação temporária de funções para garantir segurança e governança.",
+      "priority": "P1",
+      "sourceType": "MODULE",
+      "sourceLayer": 2,
+      "module": "Gestão de Identidade e Acessos (IAM)",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    }
+  ],
+  "nonFunctional": [
+    {
+      "id": "NFR-1",
+      "category": "performance",
+      "description": "Tempo de resposta do login via SSO: Tempo máximo de resposta para autenticação via SSO deve ser menor que 2 segundos para garantir boa experiência do usuário.",
+      "metric": "response_time < 2000ms"
+    },
+    {
+      "id": "NFR-2",
+      "category": "performance",
+      "description": "Entrega de notificações críticas: Notificações críticas via SMS ou WhatsApp devem ser entregues em até 1 minuto após o disparo para garantir comunicação eficaz.",
+      "metric": "delivery_time <= 1min"
+    },
+    {
+      "id": "NFR-3",
+      "category": "performance",
+      "description": "Tempo de Resposta para Operações CRUD: Operações de cadastro, edição e exclusão devem ter tempo de resposta inferior a 200 milissegundos.",
+      "metric": "response_time < 200ms"
+    },
+    {
+      "id": "NFR-4",
+      "category": "performance",
+      "description": "Tempo Máximo de Execução do Algoritmo de Alocação: O algoritmo deve concluir a alocação para instituições de grande porte em até 2 minutos.",
+      "metric": "execution_time < 2 minutos"
+    },
+    {
+      "id": "NFR-5",
+      "category": "performance",
+      "description": "Suporte a Usuários Simultâneos: O sistema deve suportar pelo menos 500 usuários acessando simultaneamente em picos.",
+      "metric": "concurrent_users >= 500"
+    },
+    {
+      "id": "NFR-6",
+      "category": "reliability",
+      "description": "Disponibilidade do Sistema: O sistema deve garantir alta disponibilidade, especialmente em períodos críticos de planejamento.",
+      "metric": "uptime >= 99.9%"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "CON-1",
+      "type": "technical",
+      "description": "Tempo de resposta do login via SSO: Tempo máximo de resposta para autenticação via SSO deve ser menor que 2 segundos para garantir boa experiência do usuário.",
+      "impact": "Métrica: response_time < 2000ms"
+    },
+    {
+      "id": "CON-2",
+      "type": "technical",
+      "description": "Entrega de notificações críticas: Notificações críticas via SMS ou WhatsApp devem ser entregues em até 1 minuto após o disparo para garantir comunicação eficaz.",
+      "impact": "Métrica: delivery_time <= 1min"
+    },
+    {
+      "id": "CON-3",
+      "type": "technical",
+      "description": "Tempo de Resposta para Operações CRUD: Operações de cadastro, edição e exclusão devem ter tempo de resposta inferior a 200 milissegundos.",
+      "impact": "Métrica: response_time < 200ms"
+    },
+    {
+      "id": "CON-4",
+      "type": "technical",
+      "description": "Tempo Máximo de Execução do Algoritmo de Alocação: O algoritmo deve concluir a alocação para instituições de grande porte em até 2 minutos.",
+      "impact": "Métrica: execution_time < 2 minutos"
+    },
+    {
+      "id": "CON-5",
+      "type": "technical",
+      "description": "Suporte a Usuários Simultâneos: O sistema deve suportar pelo menos 500 usuários acessando simultaneamente em picos.",
+      "impact": "Métrica: concurrent_users >= 500"
+    },
+    {
+      "id": "CON-6",
+      "type": "technical",
+      "description": "Disponibilidade do Sistema: O sistema deve garantir alta disponibilidade, especialmente em períodos críticos de planejamento.",
+      "impact": "Métrica: uptime >= 99.9%"
+    },
+    {
+      "id": "CON-7",
+      "type": "technical",
+      "description": "Segurança de Dados: Criptografia AES-256 em repouso, comunicação via TLS 1.3, autenticação MFA obrigatória para perfis administrativos e gestores."
+    }
+  ],
+  "assumptions": [],
+  "domainModel": [],
+  "interactions": [],
+  "edgeCases": [],
+  "terminology": [
+    {
+      "term": "Planejamento Inteligente",
+      "definition": "Módulo central do sistema que cruza demandas pedagógicas com disponibilidade física e recursos para sugerir a melhor alocação de salas e horários, prevendo conflitos e garantindo otimização.",
+      "aliases": [
+        "Alocação automática",
+        "Distribuição de Ofertas"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [],
+  "openQuestions": [],
+  "schema": "-- No ENTITY items found. Schema generation skipped.\n",
+  "apiRoutes": [],
+  "apiRoutesText": "# API Routes\n\n> Auto-generated by IdeiaEstruturada at 2026-03-15T21:56:08.399Z\n> WARNING: Review before using in production.\n\nTotal routes: 0\n",
+  "navigation": {
+    "style": "sidebar",
+    "position": "left",
+    "collapsible": true,
+    "items": [
+      {
+        "label": "Dashboard",
+        "icon": "LayoutDashboard",
+        "path": "/dashboard"
+      },
+      {
+        "label": "Gestão de Identidade e Acessos (IAM)",
+        "icon": "Box",
+        "path": "/gestao-de-identidade-e-acessos-iam"
+      }
+    ],
+    "footer": {
+      "showVersion": true,
+      "showUser": true
+    }
+  },
+  "buildSystem": {
+    "versionFormat": "vYYYY.MM.DD-NNNN",
+    "changelog": true,
+    "changelogLocation": "/versoes",
+    "buildBadge": true,
+    "buildBadgeLocation": "sidebar-footer",
+    "changelogSpec": {
+      "description": "Página de histórico de versões com mudanças, testes e validações de segurança por build.",
+      "sidebarMenuItem": true,
+      "features": [
+        "Sidebar \"Versões\" com ícone History",
+        "Tags: Novo/Correção/Melhoria",
+        "Cards por versão com testes e security tests"
+      ],
+      "versionCard": {
+        "fields": [
+          "version",
+          "branch",
+          "date",
+          "changes[]",
+          "tests[]",
+          "securityTests[]"
+        ],
+        "tags": [
+          "Novo (green)",
+          "Correção (amber)",
+          "Melhoria (blue)"
+        ]
+      },
+      "dbTable": "app_versions (id, version, branch, changes JSONB, tests JSONB, security_tests JSONB, created_at)"
+    }
+  },
+  "uiStandards": {
+    "buttons": {
+      "actionsUseIconsOnly": true,
+      "iconLibrary": "lucide-react",
+      "rules": [
+        "ALL action buttons MUST use ONLY icons — NO text labels. Tooltips required.",
+        "Pencil=edit, Trash2=delete, Eye=view, Save=save, X=cancel, Plus=create, Check=confirm."
+      ]
+    },
+    "general": [
+      "Lucide React icons throughout. Toast on CRUD ops. Loading skeletons. Empty states with action."
+    ]
+  },
+  "metadata": {
+    "totalScopeItems": 11,
+    "classificationBreakdown": {
+      "HYPOTHESIS": 11
+    },
+    "layersCovered": [
+      1,
+      2,
+      5,
+      7
+    ],
+    "generatedAt": "2026-03-15T21:56:08.399Z",
+    "locale": "pt-BR",
+    "visualIdentity": {
+      "fonts": {
+        "body": "Inter",
+        "heading": "Space Grotesk"
+      },
+      "colors": {
+        "text": "#0a0a0a",
+        "accent": "#ff3d00",
+        "primary": "#000000",
+        "surface": "#ffffff",
+        "textMuted": "#737373",
+        "accentLight": "#fff3f0",
+        "surfaceDark": "#0a0a0a",
+        "primaryLight": "#f5f5f5"
+      },
+      "preset": "minimal"
+    },
+    "module": "Gestão de Identidade e Acessos (IAM)"
+  }
+}
