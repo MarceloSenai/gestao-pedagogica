@@ -1,0 +1,44 @@
+import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+
+export async function GET(request: NextRequest) {
+  const supabase = await createServerSupabaseClient();
+  const perfil = request.nextUrl.searchParams.get("perfil");
+
+  let query = supabase.from("pessoas").select("*").order("nome");
+
+  if (perfil) {
+    query = query.eq("perfil", perfil);
+  }
+
+  const { data, error } = await query;
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json(data);
+}
+
+export async function POST(request: NextRequest) {
+  const supabase = await createServerSupabaseClient();
+  const body = await request.json();
+
+  if (!body.nome) {
+    return NextResponse.json({ error: "nome is required" }, { status: 400 });
+  }
+  if (!body.perfil) {
+    return NextResponse.json({ error: "perfil is required" }, { status: 400 });
+  }
+
+  const { data, error } = await supabase
+    .from("pessoas")
+    .insert({
+      nome: body.nome,
+      perfil: body.perfil,
+      competencias: body.competencias ?? [],
+      disponibilidade: body.disponibilidade ?? {},
+    })
+    .select()
+    .single();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json(data, { status: 201 });
+}

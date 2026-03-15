@@ -1,0 +1,768 @@
+{
+  "storyId": "IDEA-8922D1E7-initial-planejamento-inteligente",
+  "gatheredAt": "2026-03-14T19:16:26.000Z",
+  "source": "idea-pack",
+  "gatheredBy": "@idea-estruturada",
+  "elicitationVersion": "2.0",
+  "projectTitle": "Gestão Pedagógica",
+  "projectId": "8922d1e7-a231-469f-8539-2ef53fcf89b5",
+  "functional": [
+    {
+      "id": "FR-1",
+      "description": "EduResource automatiza a logística de uso dos espaços escolares, garantindo ambientes adequados com recursos necessários para cada disciplina, otimizando custos e melhorando a qualidade pedagógica.",
+      "priority": "P0",
+      "rationale": "Core product vision",
+      "sourceType": "VISION",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-2",
+      "description": "[Módulo] Gestão de Infraestrutura: Módulo para cadastro hierárquico de prédios, ambientes e recursos, rastreabilidade de ativos, status operacional e atributos técnicos dos ambientes.",
+      "priority": "P1",
+      "sourceType": "MODULE",
+      "sourceLayer": 1,
+      "module": "Gestão de Infraestrutura",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-3",
+      "description": "[Módulo] Gestão Pedagógica e Demanda: Módulo para cadastro de cursos, disciplinas, matrizes de recursos, perfis de alunos e docentes, e agrupamento de turmas para cálculo de lotação.",
+      "priority": "P1",
+      "sourceType": "MODULE",
+      "sourceLayer": 1,
+      "module": "Gestão Pedagógica e Demanda",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-4",
+      "description": "[Módulo] Planejamento Inteligente: Módulo core que cruza dados de infraestrutura e pedagógicos para gerar cronograma anual, alocando salas e recursos de forma otimizada evitando conflitos.",
+      "priority": "P1",
+      "sourceType": "MODULE",
+      "sourceLayer": 1,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-5",
+      "description": "Sistema inteligente para otimizar a infraestrutura física e pedagógica de unidades escolares, automatizando a logística de uso de espaços e recursos para garantir uso eficiente e qualidade pedagógica.",
+      "priority": "P0",
+      "rationale": "Core product vision",
+      "sourceType": "VISION",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-6",
+      "description": "[Módulo] Sistema de Relatórios e Alertas: Geração de relatórios sobre ociosidade, utilização de recursos, desempenho de alocação e notificações para conflitos e manutenção.",
+      "priority": "P1",
+      "sourceType": "MODULE",
+      "sourceLayer": 1,
+      "module": "Sistema de Relatórios e Alertas",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-7",
+      "description": "[Perfil] Gestor: Responsável pela aprovação final do planejamento anual, visualização de custos, ociosidade e auditoria de logs. Não realiza cadastros operacionais.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-8",
+      "description": "[Perfil] Coordenador: Responsável por definir requisitos das disciplinas, rodar o algoritmo de planejamento, fazer ajustes manuais documentados e acompanhar notificações de reprovação ou aprovação. Não altera dados de RH ou civis.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-9",
+      "description": "[Perfil] Secretaria: Realiza cadastro de alunos, docentes, cursos, gestão de matrículas e emissão de horários oficiais. Não altera requisitos técnicos nem algoritmo.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-10",
+      "description": "[Perfil] Professor: Consulta agenda, reporta incidentes e realiza chamada digital. Não altera local ou horário sem aprovação.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 1,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-11",
+      "description": "[Módulo] Interface Web Responsiva e Mobile: Plataforma web responsiva para gestores, coordenadores e secretarias, e aplicação mobile para professores e técnicos de manutenção com funcionalidades específicas.",
+      "priority": "P1",
+      "sourceType": "MODULE",
+      "sourceLayer": 1,
+      "module": "Interface Web Responsiva e Mobile",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-12",
+      "description": "[Perfil] Equipe de Apoio/TI: Responsável pela manutenção tecnológica, com permissão para alterar cadastro e status de recursos, abrir e fechar chamados de manutenção, sem acesso a dados acadêmicos.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-13",
+      "description": "[Perfil] Secretaria Nível 1 - Operacional: Apenas consulta e emissão de listas, sem permissão para editar cadastros.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-14",
+      "description": "[Perfil] Secretaria Nível 2 - Master: Edição de cadastros de alunos, docentes e cursos, gestão de matrículas e emissão de horários oficiais. Não altera requisitos técnicos ou lógica do algoritmo.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-15",
+      "description": "[Perfil] Docente Titular: Consulta agenda, reporta incidentes, realiza chamada digital, e pode solicitar troca de recursos ou salas.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-16",
+      "description": "[Perfil] Docente Substituto/Assistente: Apenas visualiza agenda e registra presença, sem autonomia para solicitar mudanças na infraestrutura.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-17",
+      "description": "[Perfil] Professor Titular: Consulta da agenda, reporte de incidentes, chamada digital e solicitação de mudanças de recursos ou salas.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-18",
+      "description": "[Perfil] Professor Substituto: Acesso temporário vinculado a uma disciplina com data de início e fim; herda responsabilidade pelos recursos alocados durante o período.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-19",
+      "description": "[Perfil] Professor Assistente: Visualiza o planejamento do titular, pode abrir chamados de manutenção, mas não pode solicitar mudanças de infraestruturas.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-20",
+      "description": "[Perfil] Aluno: Visualiza sua grade e localização das aulas; recebe notificações de alterações; consulta disponibilidade espontânea de laboratórios.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-21",
+      "description": "[Perfil] Responsável/Pais: Acesso de leitura para acompanhar agenda de atividades práticas e eventos; acesso via portal ou integração com app da escola.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-22",
+      "description": "[Perfil] Auditor/Comitê de Ética: Acesso somente leitura para logs de alterações e relatórios de ociosidade, garantindo transparência e isonomia na alocação.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 2,
+      "classification": "HYPOTHESIS",
+      "moscow": "SHOULD"
+    },
+    {
+      "id": "FR-23",
+      "description": "[Módulo] Gestão de Identidade e Acessos (IAM): Gerencia autenticação, controle de acesso baseado em papéis (RBAC), logs de sessão e delegação temporária de funções para garantir segurança e governança.",
+      "priority": "P1",
+      "sourceType": "MODULE",
+      "sourceLayer": 2,
+      "module": "Gestão de Identidade e Acessos (IAM)",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-24",
+      "description": "[Módulo] Notificações e Mensageria Interna: Centraliza mensagens internas, gerencia regras inteligentes de disparo de notificações e confirmações de leitura para comunicação eficiente e não intrusiva.",
+      "priority": "P1",
+      "rationale": "Depende de: Planejamento Inteligente",
+      "sourceType": "MODULE",
+      "sourceLayer": 2,
+      "module": "Notificações e Mensageria Interna",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-25",
+      "description": "[Módulo] Configurações Globais (Painel Administrativo): Permite parametrizar o algoritmo de alocação, configurar calendário acadêmico, ajustar pesos de prioridade e definir limites globais de capacidade de salas.",
+      "priority": "P1",
+      "rationale": "Depende de: Planejamento Inteligente",
+      "sourceType": "MODULE",
+      "sourceLayer": 2,
+      "module": "Configurações Globais (Painel Administrativo)",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-26",
+      "description": "[Módulo] Cadastro Hierárquico: Permite o cadastro e vínculo hierárquico entre Prédio, Ambiente e Recurso.",
+      "priority": "P1",
+      "sourceType": "MODULE",
+      "sourceLayer": 7,
+      "module": "Cadastro Hierárquico",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-27",
+      "description": "[Perfil] Perfil Coordenador: Usuário que opera o algoritmo de alocação, realiza parametrizações, ajustes manuais e flexibilizações no modo consultivo.",
+      "priority": "P0",
+      "sourceType": "PROFILE",
+      "sourceLayer": 7,
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-28",
+      "description": "[Regra] Prevenção Ativa de Conflitos: Regras hard constraints para evitar alocação simultânea de docente ou ambiente, superlotação, e inviabilidade física ou humana.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 1,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-29",
+      "description": "[Regra] Resolução de Impasses: Aplicação de critérios soft constraints como prioridade de curso e sinalização em painel de pendências para conflitos não resolvíveis automaticamente.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 1,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-30",
+      "description": "[Regra] Algoritmo de Alocação: Sugerir a melhor distribuição de salas com base na lotação e equipamentos.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 1,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-31",
+      "description": "[Regra] Gestão de Conflitos: Bloqueio de agendamentos simultâneos de docentes e ambientes, controle de superlotação e priorização de uso para resolver impasses.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 1,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-32",
+      "description": "[Regra] Controle de Acesso ao Planejamento Inteligente: Execução e ajustes restritos ao Coordenador; visualização em leitura para Gestor; bloqueio de edição após publicação.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 1,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-33",
+      "description": "[Regra] Bloqueio de Edição Pós-Publicação do Planejamento: Após publicação do planejamento, edições em massa são bloqueadas, permitindo apenas ajustes pontuais.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 1,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-34",
+      "description": "[Regra] Regra da Especialização na Alocação: Ambientes com recursos raros ou caros são alocados primeiro para garantir a utilização eficiente desses espaços especializados.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 4,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-35",
+      "description": "[Regra] Gestão de Crise em Caso de Inviabilidade de Alocação: Quando não há solução viável, o sistema sinaliza a disciplina como 'Não Alocada', gera relatório de gap e permite degradação manual dos requisitos pelo Coordenador.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 4,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-36",
+      "description": "[Regra] Regra da Eficiência de Lotação: O sistema busca o melhor ajuste entre capacidade do ambiente e número de alunos para evitar ociosidade e superlotação.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 4,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-37",
+      "description": "[Regra] Priorização de Salas Comuns para Disciplinas com Requisitos Básicos: Disciplinas que exigem apenas recursos básicos devem ser alocadas preferencialmente em salas comuns, preservando laboratórios especializados para usos específicos.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 4,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-38",
+      "description": "[Regra] Sugestão de Troca Automática de Ambientes (Cadeiras Musicais): Se há conflito de agendamento entre docentes, o sistema sugere automaticamente troca de salas compatíveis para resolver o conflito.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 4,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-39",
+      "description": "[Regra] Sugestão de Flexibilização de Horário: O sistema pode sugerir horários alternativos para disciplinas que não cabem no horário inicialmente solicitado.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 4,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "SHOULD"
+    },
+    {
+      "id": "FR-40",
+      "description": "[Regra] Trava de Publicação do Plano Anual: Após aprovação do plano anual pelo Gestor, o planejamento entra em modo somente leitura para todos os perfis, exceto abertura de Ordem de Alteração Extraordinária para edições posteriores.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 4,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-41",
+      "description": "[Regra] Justificativa Obrigatória para Degradação Manual: O sistema exige que o Coordenador insira uma justificativa textual obrigatória para qualquer degradação manual dos requisitos na alocação de turmas.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 4,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    },
+    {
+      "id": "FR-42",
+      "description": "[Regra] Modo Consultivo em Falha de Alocação: Quando o algoritmo não encontra solução 100% viável, o sistema entra em modo consultivo para identificar gargalos, sugerir relaxamento de requisitos e permitir alocação parcial manual.",
+      "priority": "P1",
+      "sourceType": "RULE",
+      "sourceLayer": 7,
+      "module": "Planejamento Inteligente",
+      "classification": "HYPOTHESIS",
+      "moscow": "MUST"
+    }
+  ],
+  "nonFunctional": [
+    {
+      "id": "NFR-1",
+      "category": "performance",
+      "description": "Tempo de resposta do login via SSO: Tempo máximo de resposta para autenticação via SSO deve ser menor que 2 segundos para garantir boa experiência do usuário.",
+      "metric": "response_time < 2000ms"
+    },
+    {
+      "id": "NFR-2",
+      "category": "performance",
+      "description": "Entrega de notificações críticas: Notificações críticas via SMS ou WhatsApp devem ser entregues em até 1 minuto após o disparo para garantir comunicação eficaz.",
+      "metric": "delivery_time <= 1min"
+    },
+    {
+      "id": "NFR-3",
+      "category": "performance",
+      "description": "Tempo de Resposta para Operações CRUD: Operações de cadastro, edição e exclusão devem ter tempo de resposta inferior a 200 milissegundos.",
+      "metric": "response_time < 200ms"
+    },
+    {
+      "id": "NFR-4",
+      "category": "performance",
+      "description": "Tempo Máximo de Execução do Algoritmo de Alocação: O algoritmo deve concluir a alocação para instituições de grande porte em até 2 minutos.",
+      "metric": "execution_time < 2 minutos"
+    },
+    {
+      "id": "NFR-5",
+      "category": "performance",
+      "description": "Suporte a Usuários Simultâneos: O sistema deve suportar pelo menos 500 usuários acessando simultaneamente em picos.",
+      "metric": "concurrent_users >= 500"
+    },
+    {
+      "id": "NFR-6",
+      "category": "reliability",
+      "description": "Disponibilidade do Sistema: O sistema deve garantir alta disponibilidade, especialmente em períodos críticos de planejamento.",
+      "metric": "uptime >= 99.9%"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "CON-1",
+      "type": "technical",
+      "description": "Tempo de resposta do login via SSO: Tempo máximo de resposta para autenticação via SSO deve ser menor que 2 segundos para garantir boa experiência do usuário.",
+      "impact": "Métrica: response_time < 2000ms"
+    },
+    {
+      "id": "CON-2",
+      "type": "technical",
+      "description": "Entrega de notificações críticas: Notificações críticas via SMS ou WhatsApp devem ser entregues em até 1 minuto após o disparo para garantir comunicação eficaz.",
+      "impact": "Métrica: delivery_time <= 1min"
+    },
+    {
+      "id": "CON-3",
+      "type": "technical",
+      "description": "Tempo de Resposta para Operações CRUD: Operações de cadastro, edição e exclusão devem ter tempo de resposta inferior a 200 milissegundos.",
+      "impact": "Métrica: response_time < 200ms"
+    },
+    {
+      "id": "CON-4",
+      "type": "technical",
+      "description": "Tempo Máximo de Execução do Algoritmo de Alocação: O algoritmo deve concluir a alocação para instituições de grande porte em até 2 minutos.",
+      "impact": "Métrica: execution_time < 2 minutos"
+    },
+    {
+      "id": "CON-5",
+      "type": "technical",
+      "description": "Suporte a Usuários Simultâneos: O sistema deve suportar pelo menos 500 usuários acessando simultaneamente em picos.",
+      "impact": "Métrica: concurrent_users >= 500"
+    },
+    {
+      "id": "CON-6",
+      "type": "technical",
+      "description": "Disponibilidade do Sistema: O sistema deve garantir alta disponibilidade, especialmente em períodos críticos de planejamento.",
+      "impact": "Métrica: uptime >= 99.9%"
+    },
+    {
+      "id": "CON-7",
+      "type": "technical",
+      "description": "Segurança de Dados: Criptografia AES-256 em repouso, comunicação via TLS 1.3, autenticação MFA obrigatória para perfis administrativos e gestores."
+    }
+  ],
+  "assumptions": [],
+  "domainModel": [
+    {
+      "id": "DM-1",
+      "entity": "Prédio",
+      "description": "Representa edifícios ou blocos dentro da unidade escolar",
+      "attributes": [
+        "id: text",
+        "nome: text",
+        "endereço: text"
+      ],
+      "relationships": [
+        "Um prédio tem vários ambientes → Ambiente"
+      ]
+    },
+    {
+      "id": "DM-2",
+      "entity": "Disciplina",
+      "description": "Disciplinas ofertadas nos cursos, com requisitos de recursos e carga horária",
+      "attributes": [
+        "id: text",
+        "nome: text",
+        "cargaHoraria: number",
+        "requisitosRecursos: list"
+      ],
+      "relationships": [
+        "Uma disciplina pertence a um curso e pode requerer vários recursos → Curso",
+        "Uma disciplina pertence a um curso e pode requerer vários recursos → Recurso"
+      ]
+    },
+    {
+      "id": "DM-3",
+      "entity": "Ambiente",
+      "description": "Espaços físicos dentro dos prédios, como salas e laboratórios",
+      "attributes": [
+        "id: text",
+        "nome: text",
+        "tipo: select"
+      ],
+      "relationships": [
+        "Um ambiente pertence a um prédio e tem vários recursos → Prédio",
+        "Um ambiente pertence a um prédio e tem vários recursos → Recurso"
+      ]
+    },
+    {
+      "id": "DM-4",
+      "entity": "Recurso",
+      "description": "Itens disponíveis nos ambientes que definem sua funcionalidade",
+      "attributes": [
+        "id: text",
+        "nome: text",
+        "quantidade: number"
+      ],
+      "relationships": [
+        "Um recurso está vinculado a um ambiente e pode ser requerido por várias disciplinas → Ambiente",
+        "Um recurso está vinculado a um ambiente e pode ser requerido por várias disciplinas → Disciplina"
+      ]
+    },
+    {
+      "id": "DM-5",
+      "entity": "Pessoa",
+      "description": "Dados cadastrais de docentes e alunos, com competências e disponibilidades para docentes",
+      "attributes": [
+        "id: text",
+        "nome: text",
+        "perfil: select",
+        "competencias: list",
+        "disponibilidade: list"
+      ],
+      "relationships": [
+        "Uma pessoa pode estar vinculada a várias disciplinas → Disciplina"
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "id": "INT-1",
+      "trigger": "Tela: Tela de Visualização e Edição do Planejamento Inteligente",
+      "flow": "Tela para exibir a grade horária gerada e permitir ajustes pelo coordenador",
+      "description": "Tela para exibir a grade horária gerada e permitir ajustes pelo coordenador",
+      "module": "Planejamento Inteligente"
+    },
+    {
+      "id": "INT-2",
+      "trigger": "Planejamento Inteligente do Ano Letivo",
+      "flow": "Coordenador importa ou confirma dados das turmas e docentes disponíveis → Coordenador define prazos, turnos e restrições para o algoritmo → Coordenador dispara o algoritmo para gerar sugestão de alocação → Sistema exibe painel de alertas com conflitos encontrados → Coordenador realiza ajustes manuais via drag & drop com validação em tempo real → Coordenador envia planejamento para homologação do Gestor → Sistema congela a edição da grade e gera resumo de eficiência → Coordenador publica a grade e o sistema dispara notificações para professores e alunos",
+      "description": "Planejamento Inteligente do Ano Letivo",
+      "module": "Planejamento Inteligente"
+    },
+    {
+      "id": "INT-3",
+      "trigger": "Fluxo do Planejamento Inteligente",
+      "flow": "Configuração da Oferta: importação de disciplinas e previsão de alunos → Validação de Inventário: checagem de capacidade das salas → Parametrização: definição de pesos para critérios de alocação → Execução do Motor: disparo do algoritmo de alocação → Revisão em Grade Visual: ajuste manual via drag & drop com destaque de conflitos → Publicação: aprovação e geração do cronograma oficial",
+      "description": "Fluxo do Planejamento Inteligente",
+      "module": "Planejamento Inteligente"
+    }
+  ],
+  "edgeCases": [
+    {
+      "id": "EC-1",
+      "scenario": "Algoritmo não encontra solução viável",
+      "handling": "O algoritmo não consegue alocar todas as turmas sem conflitos, exigindo ajustes manuais ou revisão dos parâmetros",
+      "severity": "high"
+    },
+    {
+      "id": "EC-2",
+      "scenario": "Tentativa de edição após congelamento da grade",
+      "handling": "Usuário tenta alterar a grade após publicação e congelamento, sistema bloqueia a edição",
+      "severity": "medium"
+    },
+    {
+      "id": "EC-3",
+      "scenario": "Conflito de agendamento com múltiplas trocas possíveis",
+      "handling": "O sistema sugere trocas automáticas múltiplas para resolver conflito, mas usuário não sabe qual escolher, causando confusão.",
+      "severity": "medium"
+    },
+    {
+      "id": "EC-4",
+      "scenario": "Degradação manual aprovada para sala insuficiente",
+      "handling": "Coordenador aprova alocação em sala com capacidade inferior ao número de alunos, causando superlotação e insatisfação.",
+      "severity": "high"
+    },
+    {
+      "id": "EC-5",
+      "scenario": "Edição não autorizada via Ordem de Alteração Extraordinária",
+      "handling": "Usuário tenta editar plano bloqueado sem abertura formal da Ordem de Alteração Extraordinária, burlando a trava de publicação.",
+      "severity": "high"
+    },
+    {
+      "id": "EC-6",
+      "scenario": "Sugestão de flexibilização de horário em horário inviável para docentes",
+      "handling": "O sistema sugere mudança para horário alternativo que não coincide com disponibilidade do docente, gerando conflito.",
+      "severity": "medium"
+    }
+  ],
+  "terminology": [
+    {
+      "term": "Planejamento Inteligente",
+      "definition": "Módulo central do sistema que cruza demandas pedagógicas com disponibilidade física e recursos para sugerir a melhor alocação de salas e horários, prevendo conflitos e garantindo otimização.",
+      "aliases": [
+        "Alocação automática",
+        "Distribuição de Ofertas"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC-1",
+      "ruleName": "Regra da Especialização na Alocação",
+      "criteria": [
+        "Given uma disciplina que requer laboratório especializado, When o algoritmo aloca salas, Then a sala especializada deve ser alocada antes de salas comuns",
+        "Given uma disciplina com requisitos básicos, When o algoritmo aloca salas, Then não deve alocar em laboratórios especializados vazios"
+      ],
+      "module": "Planejamento Inteligente"
+    },
+    {
+      "id": "AC-2",
+      "ruleName": "Gestão de Crise em Caso de Inviabilidade de Alocação",
+      "criteria": [
+        "Given nenhuma sala atende requisitos obrigatórios, When algoritmo não encontra solução, Then disciplina é marcada como 'Não Alocada' e relatório é enviado para Gestor",
+        "Given Coordenador decide degradar requisitos, When confirma, Then sistema permite alocação em sala não 100% compatível"
+      ],
+      "module": "Planejamento Inteligente"
+    },
+    {
+      "id": "AC-3",
+      "ruleName": "Regra da Eficiência de Lotação",
+      "criteria": [
+        "Given uma turma pequena, When o algoritmo aloca salas, Then a turma não deve ser alocada em ambiente muito maior que sua lotação",
+        "Given uma turma grande, When o algoritmo aloca salas, Then deve priorizar ambientes que comportem confortavelmente todos os alunos"
+      ],
+      "module": "Planejamento Inteligente"
+    },
+    {
+      "id": "AC-4",
+      "ruleName": "Priorização de Salas Comuns para Disciplinas com Requisitos Básicos",
+      "criteria": [
+        "Given uma disciplina com requisitos básicos, When o algoritmo aloca salas, Then não deve usar laboratórios especializados mesmo que estejam vazios"
+      ],
+      "module": "Planejamento Inteligente"
+    },
+    {
+      "id": "AC-5",
+      "ruleName": "Sugestão de Troca Automática de Ambientes (Cadeiras Musicais)",
+      "criteria": [
+        "Given conflito de agendamento de ambiente entre Professores A e B, When há outra sala compatível para o Professor B, Then o sistema sugere troca automática",
+        "Given o usuário aceita a troca, When a troca é confirmada, Then o conflito é resolvido e agendamentos atualizados"
+      ],
+      "module": "Planejamento Inteligente"
+    },
+    {
+      "id": "AC-6",
+      "ruleName": "Sugestão de Flexibilização de Horário",
+      "criteria": [
+        "Given disciplina não cabe no horário solicitado, When há horário alternativo disponível, Then o sistema sugere mudança para novo horário",
+        "Given usuário aceita a sugestão, When confirmado, Then o agendamento é alterado para o novo horário"
+      ],
+      "module": "Planejamento Inteligente"
+    },
+    {
+      "id": "AC-7",
+      "ruleName": "Trava de Publicação do Plano Anual",
+      "criteria": [
+        "Given o plano anual foi aprovado pelo Gestor, When um usuário tenta editar o planejamento, Then o sistema bloqueia a edição.",
+        "Given o plano está bloqueado, When é aberta uma Ordem de Alteração Extraordinária, Then as edições autorizadas podem ser realizadas."
+      ],
+      "module": "Planejamento Inteligente"
+    },
+    {
+      "id": "AC-8",
+      "ruleName": "Justificativa Obrigatória para Degradação Manual",
+      "criteria": [
+        "Given o Coordenador tenta degradar requisitos, When não insere justificativa, Then o sistema bloqueia a ação com mensagem de erro.",
+        "Given o Coordenador insere justificativa, When confirma a degradação, Then a ação é registrada e executada."
+      ],
+      "module": "Planejamento Inteligente"
+    }
+  ],
+  "openQuestions": [],
+  "schema": "-- ==========================================================\n-- WARNING: Auto-generated schema. Review before using in production.\n-- ==========================================================\n-- Generated by IdeiaEstruturada from Idea Pack\n-- Project: Gestão Pedagógica\n-- Generated at: 2026-03-14T19:16:25.974Z\n-- Entities: 5\n-- ==========================================================\n\n-- Trigger function for updated_at\nCREATE OR REPLACE FUNCTION trigger_set_updated_at()\nRETURNS TRIGGER AS $$\nBEGIN\n  NEW.updated_at = now();\n  RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;\n\n-- ============================================\n-- Table: predios (from Entity: Prédio)\n-- Representa edifícios ou blocos dentro da unidade escolar\n-- ============================================\nCREATE TABLE IF NOT EXISTS predios (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  nome TEXT NOT NULL -- Nome do prédio,\n  endereco TEXT -- Localização física,\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()\n);\n\nCREATE TRIGGER set_predios_updated_at\n  BEFORE UPDATE ON predios\n  FOR EACH ROW\n  EXECUTE FUNCTION trigger_set_updated_at();\n\n-- ============================================\n-- Table: disciplinas (from Entity: Disciplina)\n-- Disciplinas ofertadas nos cursos, com requisitos de recursos e carga horária\n-- ============================================\nCREATE TABLE IF NOT EXISTS disciplinas (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  curso_id UUID NOT NULL REFERENCES cursos(id) ON DELETE CASCADE,\n  recurso_id UUID NOT NULL REFERENCES recursos(id) ON DELETE CASCADE,\n  pessoa_id UUID NOT NULL REFERENCES pessoas(id) ON DELETE CASCADE,\n  nome TEXT NOT NULL -- Nome da disciplina,\n  carga_horaria NUMERIC NOT NULL -- Carga horária total,\n  requisitos_recursos JSONB DEFAULT '[]' -- Lista de recursos obrigatórios para a disciplina,\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()\n);\n\nCREATE INDEX IF NOT EXISTS idx_disciplinas_curso ON disciplinas(curso_id);\nCREATE INDEX IF NOT EXISTS idx_disciplinas_recurso ON disciplinas(recurso_id);\nCREATE INDEX IF NOT EXISTS idx_disciplinas_pessoa ON disciplinas(pessoa_id);\n\nCREATE TRIGGER set_disciplinas_updated_at\n  BEFORE UPDATE ON disciplinas\n  FOR EACH ROW\n  EXECUTE FUNCTION trigger_set_updated_at();\n\n-- ============================================\n-- Table: ambientes (from Entity: Ambiente)\n-- Espaços físicos dentro dos prédios, como salas e laboratórios\n-- ============================================\nCREATE TABLE IF NOT EXISTS ambientes (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  predio_id UUID NOT NULL REFERENCES predios(id) ON DELETE CASCADE,\n  recurso_id UUID NOT NULL REFERENCES recursos(id) ON DELETE CASCADE,\n  nome TEXT NOT NULL -- Nome do ambiente,\n  tipo TEXT NOT NULL -- Tipo de ambiente (sala de aula, laboratório, auditório, oficina),\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()\n);\n\nCREATE INDEX IF NOT EXISTS idx_ambientes_predio ON ambientes(predio_id);\nCREATE INDEX IF NOT EXISTS idx_ambientes_recurso ON ambientes(recurso_id);\n\nCREATE TRIGGER set_ambientes_updated_at\n  BEFORE UPDATE ON ambientes\n  FOR EACH ROW\n  EXECUTE FUNCTION trigger_set_updated_at();\n\n-- ============================================\n-- Table: recursos (from Entity: Recurso)\n-- Itens disponíveis nos ambientes que definem sua funcionalidade\n-- ============================================\nCREATE TABLE IF NOT EXISTS recursos (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  nome TEXT NOT NULL -- Nome do recurso,\n  quantidade NUMERIC NOT NULL -- Quantidade disponível,\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()\n);\n\nCREATE TRIGGER set_recursos_updated_at\n  BEFORE UPDATE ON recursos\n  FOR EACH ROW\n  EXECUTE FUNCTION trigger_set_updated_at();\n\n-- ============================================\n-- Table: pessoas (from Entity: Pessoa)\n-- Dados cadastrais de docentes e alunos, com competências e disponibilidades para docentes\n-- ============================================\nCREATE TABLE IF NOT EXISTS pessoas (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  nome TEXT NOT NULL -- Nome completo,\n  perfil TEXT NOT NULL -- Perfil do usuário (docente, aluno, coordenador, etc.),\n  competencias JSONB DEFAULT '[]' -- Competências para docentes,\n  disponibilidade JSONB DEFAULT '[]' -- Horários disponíveis para docentes,\n  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()\n);\n\nCREATE TRIGGER set_pessoas_updated_at\n  BEFORE UPDATE ON pessoas\n  FOR EACH ROW\n  EXECUTE FUNCTION trigger_set_updated_at();\n",
+  "apiRoutes": [
+    {
+      "method": "GET",
+      "path": "/api/planejamento-inteligentes",
+      "description": "List planejamento inteligentes",
+      "module": "Planejamento Inteligente",
+      "flowName": "Planejamento Inteligente do Ano Letivo",
+      "auth": true
+    }
+  ],
+  "apiRoutesText": "# API Routes\n\n> Auto-generated by IdeiaEstruturada at 2026-03-14T19:16:25.999Z\n> WARNING: Review before using in production.\n\nTotal routes: 1\n\n## Planejamento Inteligente\n_Módulo core que cruza dados de infraestrutura e pedagógicos para gerar cronograma anual, alocando salas e recursos de forma otimizada evitando conflitos._\n\n| Method | Path | Description | Auth |\n|--------|------|-------------|------|\n| GET    | `/api/planejamento-inteligentes` | List planejamento inteligentes | Yes |\n",
+  "metadata": {
+    "totalScopeItems": 64,
+    "totalProjectItems": 104,
+    "globalItems": 40,
+    "detailedItems": 24,
+    "focusModule": "Planejamento Inteligente",
+    "mode": "initial",
+    "classificationBreakdown": {
+      "HYPOTHESIS": 64
+    },
+    "layersCovered": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "generatedAt": "2026-03-14T19:16:26.001Z",
+    "locale": "pt-BR",
+    "visualIdentity": {
+      "fonts": {
+        "body": "Inter",
+        "heading": "Space Grotesk"
+      },
+      "colors": {
+        "text": "#0a0a0a",
+        "accent": "#ff3d00",
+        "primary": "#000000",
+        "surface": "#ffffff",
+        "textMuted": "#737373",
+        "accentLight": "#fff3f0",
+        "surfaceDark": "#0a0a0a",
+        "primaryLight": "#f5f5f5"
+      },
+      "preset": "minimal"
+    }
+  }
+}

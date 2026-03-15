@@ -1,0 +1,10 @@
+[
+  {
+    "method": "GET",
+    "path": "/api/planejamento-inteligentes",
+    "description": "List planejamento inteligentes",
+    "module": "Planejamento Inteligente",
+    "flowName": "Planejamento Inteligente do Ano Letivo",
+    "auth": true
+  }
+]

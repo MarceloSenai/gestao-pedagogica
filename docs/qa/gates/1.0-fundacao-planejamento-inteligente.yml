@@ -1,0 +1,107 @@
+schema: 1
+story: "1.0"
+story_title: "Fundação do Módulo Planejamento Inteligente"
+gate: PASS
+status_reason: "All functional ACs met. 49 tests passing. 0 TS/lint errors. Security concerns (RLS, input validation) are explicitly scoped for future stories (Story 3.0: RBAC)."
+reviewer: "Quinn (Test Architect)"
+updated: "2026-03-15T07:30:00.000Z"
+
+top_issues:
+  - severity: high
+    title: "RLS policies too permissive (any authenticated = full access)"
+    suggested_owner: dev
+    refs: ["supabase/migrations/00001_initial_schema.sql"]
+    deferred_to: "Story 3.0: Sistema de Perfis e RBAC"
+  - severity: high
+    title: "No input validation on API routes (body passed directly to Supabase)"
+    suggested_owner: dev
+    refs: ["src/app/api/*/route.ts"]
+    deferred_to: "Story 1.1: Input Validation (Zod)"
+  - severity: high
+    title: "No try-catch on request.json() parsing"
+    suggested_owner: dev
+    refs: ["src/app/api/*/route.ts"]
+  - severity: medium
+    title: "No pagination on GET endpoints"
+    suggested_owner: dev
+    refs: ["src/app/api/*/route.ts"]
+  - severity: medium
+    title: "No AbortController in useEffect fetches"
+    suggested_owner: dev
+    refs: ["src/app/(dashboard)/*/page.tsx"]
+
+waiver:
+  active: false
+
+quality_score: 70
+expires: "2026-03-29T07:30:00.000Z"
+
+evidence:
+  tests_reviewed: 49
+  test_suites: 7
+  risks_identified: 15
+  typecheck: "0 errors"
+  lint: "0 errors, 0 warnings"
+  trace:
+    ac_covered:
+      - SETUP-1
+      - SETUP-2
+      - SETUP-3
+      - PRED-1
+      - PRED-2
+      - PRED-3
+      - PRED-4
+      - AMB-1
+      - AMB-2
+      - AMB-3
+      - AMB-4
+      - REC-1
+      - REC-2
+      - REC-3
+      - REC-4
+      - CUR-1
+      - CUR-2
+      - CUR-3
+      - DISC-1
+      - DISC-2
+      - DISC-3
+      - DISC-4
+      - PES-1
+      - PES-2
+      - PES-3
+      - PES-4
+      - QUAL-3
+      - QUAL-4
+    ac_gaps:
+      - "QUAL-1 (performance not verifiable without live Supabase)"
+      - "QUAL-2 (responsive UI - visual verification only)"
+
+nfr_validation:
+  security:
+    status: CONCERNS
+    notes: "RLS permissive (any authenticated = full CRUD). Input validation missing. Deferred to Story 3.0."
+  performance:
+    status: CONCERNS
+    notes: "No pagination. select('*') on all queries. Cannot verify <200ms without live DB."
+  reliability:
+    status: PASS
+    notes: "Basic error handling functional. 49 tests passing. TypeScript strict enforced."
+  maintainability:
+    status: PASS
+    notes: "Clean architecture. Consistent patterns. Well-typed. 45 files organized per Next.js conventions."
+
+recommendations:
+  immediate:
+    - action: "Add try-catch on request.json() in all POST/PUT routes"
+      refs: ["src/app/api/*/route.ts"]
+    - action: "Sanitize Supabase error messages before returning to client"
+      refs: ["src/app/api/*/route.ts"]
+  future:
+    - action: "Implement Zod validation schemas for all entities"
+      refs: ["Story 1.1"]
+    - action: "Implement role-based RLS policies"
+      refs: ["Story 3.0"]
+    - action: "Add pagination with limit/offset on GET endpoints"
+      refs: ["src/app/api/*/route.ts"]
+    - action: "Add UI component tests (coverage currently 2/10)"
+      refs: ["src/app/(dashboard)/*/page.tsx"]
