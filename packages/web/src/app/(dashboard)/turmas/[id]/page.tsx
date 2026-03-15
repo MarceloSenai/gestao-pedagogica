@@ -49,11 +49,25 @@ export default function TurmaDetailPage() {
       if (!pessoasRes.ok) throw new Error("Erro ao carregar pessoas");
 
       const turmaData: Turma = await turmaRes.json();
-      const alunosData: Pessoa[] = await alunosRes.json();
+      const matriculasData = await alunosRes.json() as Array<{
+        id: string;
+        aluno_id: string;
+        pessoas: { nome: string; perfil: string };
+      }>;
       const pessoasData: Pessoa[] = await pessoasRes.json();
 
       setTurma(turmaData);
-      setAlunos(alunosData);
+      // Map matriculas to Pessoa-like objects for DataTable
+      const alunosFromMatriculas: Pessoa[] = matriculasData.map((m) => ({
+        id: m.aluno_id,
+        nome: m.pessoas?.nome ?? "—",
+        perfil: m.pessoas?.perfil ?? "aluno",
+        competencias: [],
+        disponibilidade: [],
+        created_at: "",
+        updated_at: "",
+      }));
+      setAlunos(alunosFromMatriculas);
       setAllAlunos(pessoasData.filter((p) => p.perfil === "aluno"));
 
       // Fetch disciplina
