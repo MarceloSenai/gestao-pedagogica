@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { DataTable, type Column } from "@/components/ui/data-table";
@@ -23,7 +23,15 @@ const emptyForm: AmbienteInsert = {
   predio_id: "",
 };
 
-export default function AmbientesPage() {
+export default function AmbientesPageWrapper() {
+  return (
+    <Suspense fallback={<div className="space-y-3"><div className="h-8 w-48 animate-pulse rounded bg-[var(--color-primary-light)]" /><div className="h-64 animate-pulse rounded-lg bg-[var(--color-primary-light)]" /></div>}>
+      <AmbientesPage />
+    </Suspense>
+  );
+}
+
+function AmbientesPage() {
   const searchParams = useSearchParams();
   const [data, setData] = useState<Ambiente[]>([]);
   const [predios, setPredios] = useState<Predio[]>([]);

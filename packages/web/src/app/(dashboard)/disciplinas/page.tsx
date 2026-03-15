@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import type { Column } from "@/components/ui/data-table";
@@ -20,7 +20,15 @@ const emptyForm: DisciplinaInsert = {
   requisitos_recursos: null,
 };
 
-export default function DisciplinasPage() {
+export default function DisciplinasPageWrapper() {
+  return (
+    <Suspense fallback={<div className="space-y-3"><div className="h-8 w-48 animate-pulse rounded bg-[var(--color-primary-light)]" /><div className="h-64 animate-pulse rounded-lg bg-[var(--color-primary-light)]" /></div>}>
+      <DisciplinasPage />
+    </Suspense>
+  );
+}
+
+function DisciplinasPage() {
   const searchParams = useSearchParams();
   const [data, setData] = useState<Disciplina[]>([]);
   const [cursos, setCursos] = useState<Curso[]>([]);
