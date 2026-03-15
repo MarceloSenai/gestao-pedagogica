@@ -49,7 +49,7 @@ export default function PlanejamentoDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [planejamento, setPlanejamento] = useState<Planejamento | null>(null);
-  const [alocacoes, setAlocacoes] = useState<AlocacaoWithJoins[]>([]);
+  const [alocacoes, setAlocações] = useState<AlocacaoWithJoins[]>([]);
   const [resumo, setResumo] = useState<Resumo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,7 +69,7 @@ export default function PlanejamentoDetailPage() {
       if (!planRes.ok) throw new Error("Erro ao carregar planejamento");
       setPlanejamento(await planRes.json());
 
-      if (alocRes.ok) setAlocacoes(await alocRes.json());
+      if (alocRes.ok) setAlocações(await alocRes.json());
       if (resumoRes.ok) setResumo(await resumoRes.json());
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
@@ -103,7 +103,7 @@ export default function PlanejamentoDetailPage() {
 
   const handlePublicar = async () => {
     const ok = await confirm({
-      message: "Publicar este planejamento? Esta acao nao pode ser desfeita.",
+      message: "Publicar este planejamento? Esta ação não pode ser desfeita.",
       confirmLabel: "Publicar",
       variant: "primary",
     });
@@ -143,7 +143,7 @@ export default function PlanejamentoDetailPage() {
   if (error || !planejamento) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-        <p className="text-sm text-red-700">{error || "Planejamento nao encontrado"}</p>
+        <p className="text-sm text-red-700">{error || "Planejamento não encontrado"}</p>
         <Button variant="secondary" size="sm" className="mt-2" onClick={() => router.push("/planejamentos")}>
           Voltar
         </Button>
@@ -152,7 +152,7 @@ export default function PlanejamentoDetailPage() {
   }
 
   const isRascunho = planejamento.status === "rascunho";
-  const hasAlocacoes = alocacoes.length > 0;
+  const hasAlocações = alocacoes.length > 0;
 
   const alocadas = alocacoes.filter((a) => a.status === "alocada");
   const naoAlocadas = alocacoes.filter((a) => a.status === "nao_alocada" || a.status === "conflito");
@@ -183,12 +183,12 @@ export default function PlanejamentoDetailPage() {
               {executing ? "Executando..." : "Executar Alocacao"}
             </Button>
           )}
-          {isRascunho && hasAlocacoes && (
+          {isRascunho && hasAlocações && (
             <Button variant="secondary" onClick={handlePublicar} loading={publishing}>
               Publicar
             </Button>
           )}
-          {hasAlocacoes && (
+          {hasAlocações && (
             <Link href={`/planejamentos/${id}/grade`}>
               <Button variant="secondary">
                 Ver Grade
@@ -210,7 +210,7 @@ export default function PlanejamentoDetailPage() {
             <p className="mt-1 text-2xl font-bold text-green-700">{resumo.alocadas}</p>
           </div>
           <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-            <p className="text-xs font-medium uppercase tracking-wide text-red-600">Nao Alocadas</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-red-600">Não Alocadas</p>
             <p className="mt-1 text-2xl font-bold text-red-700">{resumo.nao_alocadas}</p>
           </div>
           <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
@@ -224,11 +224,11 @@ export default function PlanejamentoDetailPage() {
         </div>
       )}
 
-      {/* Alocacoes Table */}
+      {/* Alocações Table */}
       {alocadas.length > 0 && (
         <div>
           <h2 className="font-[family-name:var(--font-space-grotesk)] text-lg font-semibold text-[var(--color-text)] mb-3">
-            Alocacoes
+            Alocações
           </h2>
           <div className="overflow-x-auto rounded-lg border border-[var(--color-primary-light)] shadow-sm bg-[var(--color-surface)]">
             <table className="w-full text-sm">
@@ -272,11 +272,11 @@ export default function PlanejamentoDetailPage() {
         </div>
       )}
 
-      {/* Nao Alocadas */}
+      {/* Não Alocadas */}
       {naoAlocadas.length > 0 && (
         <div>
           <h2 className="font-[family-name:var(--font-space-grotesk)] text-lg font-semibold text-red-700 mb-3">
-            Nao Alocadas / Conflitos
+            Não Alocadas / Conflitos
           </h2>
           <div className="overflow-x-auto rounded-lg border border-red-200 shadow-sm bg-[var(--color-surface)]">
             <table className="w-full text-sm">
@@ -310,7 +310,7 @@ export default function PlanejamentoDetailPage() {
       )}
 
       {/* Empty state */}
-      {!hasAlocacoes && (
+      {!hasAlocações && (
         <div className="rounded-lg border border-[var(--color-primary-light)] bg-[var(--color-surface)] p-8 text-center">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3 opacity-30">
             <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />

@@ -71,7 +71,7 @@ export default function GradeVisualPage() {
   if (error || !planejamento) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-        <p className="text-sm text-red-700">{error || "Planejamento nao encontrado"}</p>
+        <p className="text-sm text-red-700">{error || "Planejamento não encontrado"}</p>
         <Button variant="secondary" size="sm" className="mt-2" onClick={() => router.back()}>
           Voltar
         </Button>
