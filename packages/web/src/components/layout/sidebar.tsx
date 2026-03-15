@@ -231,7 +231,11 @@ export function Sidebar({ open, collapsed, onClose, onToggleCollapse }: SidebarP
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
+    // Exact match for parent routes that have children (e.g. /relatorios vs /relatorios/ambientes)
+    if (pathname === href) return true;
+    // Only match startsWith if the next char is / (prevents /relatorios matching /relatorios-something)
+    if (pathname.startsWith(href + "/")) return true;
+    return false;
   };
 
   const sidebarWidth = collapsed ? "w-16" : "w-60";
