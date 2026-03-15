@@ -18,6 +18,7 @@ const entities: { label: string; href: string; endpoint: string }[] = [
   { label: "Pessoas", href: "/pessoas", endpoint: "/api/pessoas" },
   { label: "Turmas", href: "/turmas", endpoint: "/api/turmas" },
   { label: "Chamados", href: "/chamados", endpoint: "/api/chamados" },
+  { label: "Relatórios", href: "/relatorios", endpoint: "" },
 ];
 
 export default function DashboardPage() {
@@ -30,6 +31,9 @@ export default function DashboardPage() {
     const fetchCounts = async () => {
       const results = await Promise.all(
         entities.map(async (e) => {
+          if (!e.endpoint) {
+            return { label: e.label, href: e.href, count: null };
+          }
           try {
             const res = await fetch(e.endpoint);
             if (!res.ok) return { label: e.label, href: e.href, count: null };
