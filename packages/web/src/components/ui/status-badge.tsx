@@ -2,7 +2,7 @@
 
 interface StatusBadgeProps {
   status: string;
-  variant?: "ambiente" | "recurso" | "chamado" | "prioridade";
+  variant?: "ambiente" | "recurso" | "chamado" | "prioridade" | "planejamento" | "alocacao";
 }
 
 const colors: Record<string, Record<string, string>> = {
@@ -28,6 +28,15 @@ const colors: Record<string, Record<string, string>> = {
     alta: "bg-orange-100 text-orange-700",
     urgente: "bg-red-100 text-red-700",
   },
+  planejamento: {
+    rascunho: "bg-yellow-100 text-yellow-700",
+    publicado: "bg-green-100 text-green-700",
+  },
+  alocacao: {
+    alocada: "bg-green-100 text-green-700",
+    nao_alocada: "bg-red-100 text-red-700",
+    conflito: "bg-yellow-100 text-yellow-700",
+  },
 };
 
 const labels: Record<string, string> = {
@@ -44,6 +53,11 @@ const labels: Record<string, string> = {
   media: "Média",
   alta: "Alta",
   urgente: "Urgente",
+  rascunho: "Rascunho",
+  publicado: "Publicado",
+  alocada: "Alocada",
+  nao_alocada: "Não Alocada",
+  conflito: "Conflito",
 };
 
 export function StatusBadge({ status, variant = "chamado" }: StatusBadgeProps) {

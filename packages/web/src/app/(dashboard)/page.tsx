@@ -18,6 +18,7 @@ const entities: { label: string; href: string; endpoint: string }[] = [
   { label: "Pessoas", href: "/pessoas", endpoint: "/api/pessoas" },
   { label: "Turmas", href: "/turmas", endpoint: "/api/turmas" },
   { label: "Chamados", href: "/chamados", endpoint: "/api/chamados" },
+  { label: "Planejamentos", href: "/planejamentos", endpoint: "/api/planejamentos" },
   { label: "Relatórios", href: "/relatorios", endpoint: "" },
 ];
 

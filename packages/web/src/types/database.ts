@@ -346,6 +346,86 @@ export interface Database {
           },
         ];
       };
+      planejamentos: {
+        Row: {
+          id: string;
+          semestre: string;
+          ano: number;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          semestre: string;
+          ano: number;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          semestre?: string;
+          ano?: number;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      alocacoes: {
+        Row: {
+          id: string;
+          planejamento_id: string;
+          turma_id: string;
+          ambiente_id: string | null;
+          status: string;
+          motivo: string | null;
+          score: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          planejamento_id: string;
+          turma_id: string;
+          ambiente_id?: string | null;
+          status?: string;
+          motivo?: string | null;
+          score?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          planejamento_id?: string;
+          turma_id?: string;
+          ambiente_id?: string | null;
+          status?: string;
+          motivo?: string | null;
+          score?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "alocacoes_planejamento_id_fkey";
+            columns: ["planejamento_id"];
+            isOneToOne: false;
+            referencedRelation: "planejamentos";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alocacoes_turma_id_fkey";
+            columns: ["turma_id"];
+            isOneToOne: false;
+            referencedRelation: "turmas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "alocacoes_ambiente_id_fkey";
+            columns: ["ambiente_id"];
+            isOneToOne: false;
+            referencedRelation: "ambientes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       chamados: {
         Row: {
           id: string;
@@ -441,6 +521,16 @@ export type TurmasTurno = "manha" | "tarde" | "noite";
 export type Chamado = Database["public"]["Tables"]["chamados"]["Row"];
 export type ChamadoInsert = Database["public"]["Tables"]["chamados"]["Insert"];
 export type ChamadoUpdate = Database["public"]["Tables"]["chamados"]["Update"];
+
+export type Planejamento = Database["public"]["Tables"]["planejamentos"]["Row"];
+export type PlanejamentoInsert = Database["public"]["Tables"]["planejamentos"]["Insert"];
+export type PlanejamentoUpdate = Database["public"]["Tables"]["planejamentos"]["Update"];
+
+export type Alocacao = Database["public"]["Tables"]["alocacoes"]["Row"];
+export type AlocacaoInsert = Database["public"]["Tables"]["alocacoes"]["Insert"];
+
+export type PlanejamentoStatus = "rascunho" | "publicado";
+export type AlocacaoStatus = "alocada" | "nao_alocada" | "conflito";
 
 export type AmbienteStatus = "ativo" | "em_manutencao" | "desativado";
 export type RecursoStatus = "disponivel" | "em_uso" | "em_manutencao" | "indisponivel";
