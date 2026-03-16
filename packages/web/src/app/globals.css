@@ -14,7 +14,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     --color-primary: #ffffff;
     --color-primary-light: #1a1a1a;
     --color-accent: #ff5722;
@@ -26,6 +26,19 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+:root.dark {
+  --color-primary: #ffffff;
+  --color-primary-light: #1a1a1a;
+  --color-accent: #ff5722;
+  --color-accent-light: #2a1510;
+  --color-surface: #111111;
+  --color-surface-dark: #050505;
+  --color-text: #ededed;
+  --color-text-muted: #888888;
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 @theme inline {

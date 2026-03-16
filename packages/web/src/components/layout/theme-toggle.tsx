@@ -2,35 +2,43 @@
 
 import { useEffect, useState } from "react";
 
+function applyTheme(isDark: boolean) {
+  const root = document.documentElement;
+  if (isDark) {
+    root.classList.add("dark");
+    root.classList.remove("light");
+    root.style.colorScheme = "dark";
+  } else {
+    root.classList.remove("dark");
+    root.classList.add("light");
+    root.style.colorScheme = "light";
+  }
+}
+
 export function ThemeToggle() {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    // Check system preference
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    setDark(mq.matches);
-
-    // Check saved preference
     const saved = localStorage.getItem("theme");
     if (saved === "dark") {
       setDark(true);
-      document.documentElement.classList.add("dark");
+      applyTheme(true);
     } else if (saved === "light") {
       setDark(false);
-      document.documentElement.classList.remove("dark");
+      applyTheme(false);
+    } else {
+      // No saved preference — follow system
+      const mq = window.matchMedia("(prefers-color-scheme: dark)");
+      setDark(mq.matches);
+      // Don't add .dark/.light — let @media query handle it
     }
   }, []);
 
   const toggle = () => {
     const newDark = !dark;
     setDark(newDark);
-    if (newDark) {
-      document.documentElement.style.colorScheme = "dark";
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.style.colorScheme = "light";
-      localStorage.setItem("theme", "light");
-    }
+    applyTheme(newDark);
+    localStorage.setItem("theme", newDark ? "dark" : "light");
   };
 
   return (
