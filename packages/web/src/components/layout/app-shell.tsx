@@ -3,6 +3,8 @@
 import { useState, type ReactNode } from "react";
 import { Sidebar } from "./sidebar";
 import { NotificationBell } from "./notification-bell";
+import { ThemeToggle } from "./theme-toggle";
+import { SearchBar } from "./search-bar";
 
 interface AppShellProps {
   children: ReactNode;
@@ -51,12 +53,19 @@ export function AppShell({ children }: AppShellProps) {
               Gestão Pedagógica
             </span>
           </div>
-          <NotificationBell />
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <NotificationBell />
+          </div>
         </header>
 
         {/* Desktop header */}
-        <header className="hidden lg:flex h-14 items-center justify-end border-b border-[var(--color-primary-light)] bg-[var(--color-surface)] px-6">
-          <NotificationBell />
+        <header className="hidden lg:flex h-14 items-center justify-between border-b border-[var(--color-primary-light)] bg-[var(--color-surface)] px-6">
+          <SearchBar />
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <NotificationBell />
+          </div>
         </header>
 
         <main className="flex-1 overflow-y-auto p-8">{children}</main>

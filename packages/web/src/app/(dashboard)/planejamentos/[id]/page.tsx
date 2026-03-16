@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { ExportButton } from "@/components/ui/export-button";
 import { toast } from "@/components/ui/toast";
 import { confirm } from "@/components/ui/confirm-dialog";
 import type { Planejamento, AlteracaoExtraordinaria } from "@/types/database";
@@ -91,19 +92,19 @@ export default function PlanejamentoDetailPage() {
   const [turmaOptions, setTurmaOptions] = useState<TurmaOption[]>([]);
   const [ambienteOptions, setAmbienteOptions] = useState<AmbienteOption[]>([]);
 
-  const fetchAlteracoes = useCallback(async () => {
-    const res = await fetch(`/api/planejamentos/${id}/alteracoes`);
+  const fetchAlteracoes = useCallback(async (signal?: AbortSignal) => {
+    const res = await fetch(`/api/planejamentos/${id}/alteracoes`, { signal });
     if (res.ok) setAlteracoes(await res.json());
   }, [id]);
 
-  const fetchAll = useCallback(async () => {
+  const fetchAll = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
     try {
       const [planRes, alocRes, resumoRes] = await Promise.all([
-        fetch(`/api/planejamentos/${id}`),
-        fetch(`/api/planejamentos/${id}/alocacoes`),
-        fetch(`/api/planejamentos/${id}/resumo`),
+        fetch(`/api/planejamentos/${id}`, { signal }),
+        fetch(`/api/planejamentos/${id}/alocacoes`, { signal }),
+        fetch(`/api/planejamentos/${id}/resumo`, { signal }),
       ]);
 
       if (!planRes.ok) throw new Error("Erro ao carregar planejamento");
@@ -112,8 +113,9 @@ export default function PlanejamentoDetailPage() {
       if (alocRes.ok) setAlocacoes(await alocRes.json());
       if (resumoRes.ok) setResumo(await resumoRes.json());
 
-      await fetchAlteracoes();
+      await fetchAlteracoes(signal);
     } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
       setLoading(false);
@@ -121,7 +123,9 @@ export default function PlanejamentoDetailPage() {
   }, [id, fetchAlteracoes]);
 
   useEffect(() => {
-    fetchAll();
+    const controller = new AbortController();
+    fetchAll(controller.signal);
+    return () => controller.abort();
   }, [fetchAll]);
 
   // Build turma/ambiente options from alocacoes
@@ -311,6 +315,7 @@ export default function PlanejamentoDetailPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <ExportButton targetId="print-content" />
           {isRascunho && (
             <Button variant="primary" onClick={handleExecutar} loading={executing}>
               {executing ? "Executando..." : "Executar Alocação"}
@@ -336,6 +341,7 @@ export default function PlanejamentoDetailPage() {
         </div>
       </div>
 
+      <div id="print-content">
       {/* Published lock banner */}
       {isPublicado && (
         <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
@@ -559,6 +565,7 @@ export default function PlanejamentoDetailPage() {
           </p>
         </div>
       )}
+      </div>
 
       {/* Modal: Nova Alteração Extraordinária */}
       {showAlteracaoModal && (

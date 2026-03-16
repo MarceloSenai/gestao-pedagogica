@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ExportButton } from "@/components/ui/export-button";
 
 interface DemandaItem {
   curso_id: string;
@@ -34,13 +35,16 @@ export default function DemandaPedagogicaPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-[family-name:var(--font-space-grotesk)] text-xl font-semibold text-[var(--color-text)]">
-          Demanda Pedagógica
-        </h1>
-        <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-          Turmas, vagas e ocupação por curso
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-[family-name:var(--font-space-grotesk)] text-xl font-semibold text-[var(--color-text)]">
+            Demanda Pedagógica
+          </h1>
+          <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+            Turmas, vagas e ocupação por curso
+          </p>
+        </div>
+        <ExportButton targetId="print-content" />
       </div>
 
       {error && (
@@ -59,7 +63,7 @@ export default function DemandaPedagogicaPage() {
           ))}
         </div>
       ) : (
-        <>
+        <div id="print-content">
           {/* Table */}
           <div className="overflow-x-auto rounded-lg border border-[var(--color-primary-light)]">
             <table className="w-full text-sm">
@@ -168,7 +172,7 @@ export default function DemandaPedagogicaPage() {
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

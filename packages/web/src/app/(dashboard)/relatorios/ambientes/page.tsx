@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { ExportButton } from "@/components/ui/export-button";
 
 interface AmbienteRelatorio {
   id: string;
@@ -54,13 +55,16 @@ export default function UtilizacaoAmbientesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-[family-name:var(--font-space-grotesk)] text-xl font-semibold text-[var(--color-text)]">
-          Utilização de Ambientes
-        </h1>
-        <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-          Capacidade e status dos ambientes por prédio
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-[family-name:var(--font-space-grotesk)] text-xl font-semibold text-[var(--color-text)]">
+            Utilização de Ambientes
+          </h1>
+          <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+            Capacidade e status dos ambientes por prédio
+          </p>
+        </div>
+        <ExportButton targetId="print-content" />
       </div>
 
       <div className="flex items-center gap-4">
@@ -94,7 +98,7 @@ export default function UtilizacaoAmbientesPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-[var(--color-primary-light)]">
+        <div id="print-content" className="overflow-x-auto rounded-lg border border-[var(--color-primary-light)]">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--color-primary-light)] bg-[var(--color-surface-dark)]">

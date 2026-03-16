@@ -9,6 +9,14 @@ interface EntityCount {
   count: number | null;
 }
 
+function timeAgo(date: string): string {
+  const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+  if (s < 60) return "agora";
+  if (s < 3600) return `${Math.floor(s / 60)}min`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h`;
+  return `${Math.floor(s / 86400)}d atras`;
+}
+
 const entities: { label: string; href: string; endpoint: string }[] = [
   { label: "Prédios", href: "/predios", endpoint: "/api/predios" },
   { label: "Ambientes", href: "/ambientes", endpoint: "/api/ambientes" },
@@ -27,8 +35,12 @@ export default function DashboardPage() {
     entities.map((e) => ({ label: e.label, href: e.href, count: null }))
   );
   const [loading, setLoading] = useState(true);
+  const [activities, setActivities] = useState<
+    Array<{ tipo: string; nome: string; data: string; href: string }>
+  >([]);
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchCounts = async () => {
       const results = await Promise.all(
         entities.map(async (e) => {
@@ -36,7 +48,9 @@ export default function DashboardPage() {
             return { label: e.label, href: e.href, count: null };
           }
           try {
-            const res = await fetch(e.endpoint);
+            const res = await fetch(e.endpoint, {
+              signal: controller.signal,
+            });
             if (!res.ok) return { label: e.label, href: e.href, count: null };
             const json = await res.json();
             return {
@@ -44,7 +58,10 @@ export default function DashboardPage() {
               href: e.href,
               count: Array.isArray(json) ? json.length : 0,
             };
-          } catch {
+          } catch (err) {
+            if (err instanceof Error && err.name === "AbortError") {
+              return { label: e.label, href: e.href, count: null };
+            }
             return { label: e.label, href: e.href, count: null };
           }
         })
@@ -53,6 +70,13 @@ export default function DashboardPage() {
       setLoading(false);
     };
     fetchCounts();
+
+    fetch("/api/atividade-recente", { signal: controller.signal })
+      .then((r) => (r.ok ? r.json() : []))
+      .then(setActivities)
+      .catch(() => {});
+
+    return () => controller.abort();
   }, []);
 
   return (
@@ -85,6 +109,35 @@ export default function DashboardPage() {
               </p>
             </Link>
           ))}
+        </div>
+      )}
+
+      {activities.length > 0 && (
+        <div>
+          <h2 className="font-[family-name:var(--font-space-grotesk)] text-lg font-semibold text-[var(--color-text)] mb-3">
+            Atividade Recente
+          </h2>
+          <div className="rounded-lg border border-[var(--color-primary-light)] bg-[var(--color-surface)] divide-y divide-[var(--color-primary-light)]">
+            {activities.map((a, i) => (
+              <a
+                key={i}
+                href={a.href}
+                className="flex items-center justify-between px-4 py-3 hover:bg-[var(--color-primary-light)] transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex items-center rounded-full bg-[var(--color-primary-light)] px-2 py-0.5 text-[10px] font-medium text-[var(--color-text-muted)]">
+                    {a.tipo}
+                  </span>
+                  <span className="text-sm text-[var(--color-text)]">
+                    {a.nome}
+                  </span>
+                </div>
+                <span className="text-xs text-[var(--color-text-muted)]">
+                  {timeAgo(a.data)}
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
       )}
     </div>

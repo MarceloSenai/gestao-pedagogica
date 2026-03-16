@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Recurso } from "@/types/database";
+import { ExportButton } from "@/components/ui/export-button";
 
 interface DisciplinaMatriz {
   id: string;
@@ -58,16 +59,19 @@ export default function MatrizRecursosPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-[family-name:var(--font-space-grotesk)] text-xl font-semibold text-[var(--color-text)]">
-        Matriz de Recursos
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="font-[family-name:var(--font-space-grotesk)] text-xl font-semibold text-[var(--color-text)]">
+          Matriz de Recursos
+        </h1>
+        <ExportButton targetId="print-content" />
+      </div>
 
       {disciplinas.length === 0 || recursos.length === 0 ? (
         <p className="text-[var(--color-text-muted)]">
           Nenhum dado disponível. Cadastre disciplinas e recursos primeiro.
         </p>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-[var(--color-primary-light)] shadow-sm bg-[var(--color-surface)]">
+        <div id="print-content" className="overflow-x-auto rounded-lg border border-[var(--color-primary-light)] shadow-sm bg-[var(--color-surface)]">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--color-primary-light)] bg-[var(--color-primary-light)]/60">

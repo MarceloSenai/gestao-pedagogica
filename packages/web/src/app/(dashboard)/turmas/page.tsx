@@ -53,15 +53,15 @@ export default function TurmasPage() {
   const [filtroSemestre, setFiltroSemestre] = useState("");
   const [filtroCursoId, setFiltroCursoId] = useState("");
 
-  const fetchData = async () => {
+  const fetchData = async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
     try {
       const [turmasRes, discRes, cursosRes, pessoasRes] = await Promise.all([
-        fetch("/api/turmas"),
-        fetch("/api/disciplinas"),
-        fetch("/api/cursos"),
-        fetch("/api/pessoas"),
+        fetch("/api/turmas", { signal }),
+        fetch("/api/disciplinas", { signal }),
+        fetch("/api/cursos", { signal }),
+        fetch("/api/pessoas", { signal }),
       ]);
       if (!turmasRes.ok) throw new Error("Erro ao carregar turmas");
       if (!discRes.ok) throw new Error("Erro ao carregar disciplinas");
@@ -74,6 +74,7 @@ export default function TurmasPage() {
       const pessoas: Pessoa[] = await pessoasRes.json();
       setDocentes(pessoas.filter((p) => p.perfil === "docente"));
     } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
       setLoading(false);
@@ -81,7 +82,9 @@ export default function TurmasPage() {
   };
 
   useEffect(() => {
-    fetchData();
+    const controller = new AbortController();
+    fetchData(controller.signal);
+    return () => controller.abort();
   }, []);
 
   const discMap = Object.fromEntries(disciplinas.map((d) => [d.id, d]));

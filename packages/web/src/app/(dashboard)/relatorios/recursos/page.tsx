@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { ExportButton } from "@/components/ui/export-button";
 
 interface RecursoRelatorio {
   id: string;
@@ -34,13 +35,16 @@ export default function RecursosRelatorioPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-[family-name:var(--font-space-grotesk)] text-xl font-semibold text-[var(--color-text)]">
-          Recursos e Demanda
-        </h1>
-        <p className="mt-1 text-sm text-[var(--color-text-muted)]">
-          Disponibilidade de recursos e quantidade de disciplinas que os requerem
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-[family-name:var(--font-space-grotesk)] text-xl font-semibold text-[var(--color-text)]">
+            Recursos e Demanda
+          </h1>
+          <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+            Disponibilidade de recursos e quantidade de disciplinas que os requerem
+          </p>
+        </div>
+        <ExportButton targetId="print-content" />
       </div>
 
       {error && (
@@ -59,7 +63,7 @@ export default function RecursosRelatorioPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-[var(--color-primary-light)]">
+        <div id="print-content" className="overflow-x-auto rounded-lg border border-[var(--color-primary-light)]">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--color-primary-light)] bg-[var(--color-surface-dark)]">
