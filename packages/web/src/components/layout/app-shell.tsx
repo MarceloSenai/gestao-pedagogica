@@ -5,6 +5,7 @@ import { Sidebar } from "./sidebar";
 import { NotificationBell } from "./notification-bell";
 import { ThemeToggle } from "./theme-toggle";
 import { SearchBar } from "./search-bar";
+import { OnboardingTrigger } from "@/components/onboarding/onboarding-wizard";
 
 interface AppShellProps {
   children: ReactNode;
@@ -54,6 +55,7 @@ export function AppShell({ children }: AppShellProps) {
             </span>
           </div>
           <div className="flex items-center gap-1">
+            <OnboardingTrigger />
             <ThemeToggle />
             <NotificationBell />
           </div>
@@ -63,6 +65,7 @@ export function AppShell({ children }: AppShellProps) {
         <header className="hidden lg:flex h-14 items-center justify-between border-b border-[var(--color-primary-light)] bg-[var(--color-surface)] px-6">
           <SearchBar />
           <div className="flex items-center gap-1">
+            <OnboardingTrigger />
             <ThemeToggle />
             <NotificationBell />
           </div>
