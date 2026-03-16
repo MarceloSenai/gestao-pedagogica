@@ -566,6 +566,39 @@ export interface Database {
         };
         Relationships: [];
       };
+      disciplina_recursos: {
+        Row: {
+          disciplina_id: string;
+          recurso_id: string;
+          quantidade: number;
+        };
+        Insert: {
+          disciplina_id: string;
+          recurso_id: string;
+          quantidade?: number;
+        };
+        Update: {
+          disciplina_id?: string;
+          recurso_id?: string;
+          quantidade?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "disciplina_recursos_disciplina_id_fkey";
+            columns: ["disciplina_id"];
+            isOneToOne: false;
+            referencedRelation: "disciplinas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "disciplina_recursos_recurso_id_fkey";
+            columns: ["recurso_id"];
+            isOneToOne: false;
+            referencedRelation: "recursos";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       configuracoes: {
         Row: {
           id: string;
@@ -626,6 +659,7 @@ export type PessoaInsert = Database["public"]["Tables"]["pessoas"]["Insert"];
 export type PessoaUpdate = Database["public"]["Tables"]["pessoas"]["Update"];
 
 export type AmbienteRecurso = Database["public"]["Tables"]["ambiente_recursos"]["Row"];
+export type DisciplinaRecurso = Database["public"]["Tables"]["disciplina_recursos"]["Row"];
 export type PessoaDisciplina = Database["public"]["Tables"]["pessoa_disciplinas"]["Row"];
 
 export type AmbienteTipo = "sala" | "laboratorio" | "auditorio" | "oficina";

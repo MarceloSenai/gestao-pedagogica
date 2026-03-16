@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
 // Create a chainable mock
-function createChainMock(finalData: unknown = [], finalError: unknown = null) {
+function createChainMock(finalData: unknown = [], finalError: unknown = null, finalCount: number | null = null) {
   const mock: Record<string, unknown> = {
     select: vi.fn().mockReturnThis(),
     insert: vi.fn().mockReturnThis(),
@@ -10,11 +10,12 @@ function createChainMock(finalData: unknown = [], finalError: unknown = null) {
     delete: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
     order: vi.fn().mockReturnThis(),
+    range: vi.fn().mockReturnThis(),
     single: vi.fn().mockReturnThis(),
   };
   // Make it thenable so `await query` resolves
-  mock.then = (resolve: (value: { data: unknown; error: unknown }) => void) =>
-    resolve({ data: finalData, error: finalError });
+  mock.then = (resolve: (value: { data: unknown; error: unknown; count: number | null }) => void) =>
+    resolve({ data: finalData, error: finalError, count: finalCount });
   return mock;
 }
 
@@ -42,7 +43,8 @@ describe("GET /api/predios", () => {
     ];
     chainMock = createChainMock(predios);
 
-    const response = await GET();
+    const request = new NextRequest("http://localhost/api/predios");
+    const response = await GET(request);
     const json = await response.json();
 
     expect(response.status).toBe(200);
@@ -53,11 +55,30 @@ describe("GET /api/predios", () => {
   it("returns 500 on Supabase error", async () => {
     chainMock = createChainMock(null, { message: "DB error" });
 
-    const response = await GET();
+    const request = new NextRequest("http://localhost/api/predios");
+    const response = await GET(request);
     const json = await response.json();
 
     expect(response.status).toBe(500);
     expect(json.error).toBe("DB error");
+  });
+
+  it("returns paginated response when page param is set", async () => {
+    const predios = [{ id: "1", nome: "Predio A", endereco: "Rua X" }];
+    chainMock = createChainMock(predios, null, 5);
+
+    const request = new NextRequest("http://localhost/api/predios?page=1&limit=10");
+    const response = await GET(request);
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.data).toEqual(predios);
+    expect(json.pagination).toEqual({
+      page: 1,
+      limit: 10,
+      total: 5,
+      totalPages: 1,
+    });
   });
 });
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
-function createChainMock(finalData: unknown = [], finalError: unknown = null) {
+function createChainMock(finalData: unknown = [], finalError: unknown = null, finalCount: number | null = null) {
   const mock: Record<string, unknown> = {
     select: vi.fn().mockReturnThis(),
     insert: vi.fn().mockReturnThis(),
@@ -9,10 +9,11 @@ function createChainMock(finalData: unknown = [], finalError: unknown = null) {
     delete: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
     order: vi.fn().mockReturnThis(),
+    range: vi.fn().mockReturnThis(),
     single: vi.fn().mockReturnThis(),
   };
-  mock.then = (resolve: (value: { data: unknown; error: unknown }) => void) =>
-    resolve({ data: finalData, error: finalError });
+  mock.then = (resolve: (value: { data: unknown; error: unknown; count: number | null }) => void) =>
+    resolve({ data: finalData, error: finalError, count: finalCount });
   return mock;
 }
 

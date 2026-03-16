@@ -150,13 +150,19 @@ function DisciplinasPage() {
     }
   };
 
-  const openReqModal = (item: Disciplina) => {
+  const openReqModal = async (item: Disciplina) => {
     setReqEditing(item);
-    const existing: RequisitoItem[] = Array.isArray(item.requisitos_recursos)
-      ? (item.requisitos_recursos as unknown as RequisitoItem[])
-      : [];
-    setReqItems(existing);
+    setReqItems([]);
     setReqModalOpen(true);
+    try {
+      const res = await fetch(`/api/disciplinas/${item.id}/recursos`);
+      if (res.ok) {
+        const items: RequisitoItem[] = await res.json();
+        setReqItems(items);
+      }
+    } catch {
+      // Fallback to empty — user can still add items
+    }
   };
 
   const toggleReqItem = (recursoId: string, checked: boolean) => {

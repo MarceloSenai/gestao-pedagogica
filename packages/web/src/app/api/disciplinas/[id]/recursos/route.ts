@@ -9,13 +9,19 @@ export async function GET(
   const supabase = await createServerSupabaseClient();
 
   const { data, error } = await supabase
-    .from("disciplinas")
-    .select("requisitos_recursos")
-    .eq("id", id)
-    .single();
+    .from("disciplina_recursos")
+    .select("recurso_id, quantidade, recursos(nome)")
+    .eq("disciplina_id", id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 404 });
-  return NextResponse.json(data.requisitos_recursos);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  const items = (data ?? []).map((row: Record<string, unknown>) => ({
+    recurso_id: row.recurso_id as string,
+    quantidade: row.quantidade as number,
+    recurso_nome: (row.recursos as { nome: string } | null)?.nome ?? null,
+  }));
+
+  return NextResponse.json(items);
 }
 
 export async function PUT(
@@ -24,22 +30,37 @@ export async function PUT(
 ) {
   const { id } = await params;
   const supabase = await createServerSupabaseClient();
-  const body = await request.json();
+  const body: Array<{ recurso_id: string; quantidade?: number }> = await request.json();
 
-  if (!body.requisitos_recursos) {
+  if (!Array.isArray(body)) {
     return NextResponse.json(
-      { error: "requisitos_recursos is required" },
+      { error: "Body must be an array of { recurso_id, quantidade }" },
       { status: 400 }
     );
   }
 
-  const { data, error } = await supabase
-    .from("disciplinas")
-    .update({ requisitos_recursos: body.requisitos_recursos })
-    .eq("id", id)
-    .select()
-    .single();
+  // Delete existing rows for this disciplina
+  const { error: delError } = await supabase
+    .from("disciplina_recursos")
+    .delete()
+    .eq("disciplina_id", id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+  if (delError) return NextResponse.json({ error: delError.message }, { status: 500 });
+
+  // Insert new rows (if any)
+  if (body.length > 0) {
+    const rows = body.map((item) => ({
+      disciplina_id: id,
+      recurso_id: item.recurso_id,
+      quantidade: item.quantidade ?? 1,
+    }));
+
+    const { error: insError } = await supabase
+      .from("disciplina_recursos")
+      .insert(rows);
+
+    if (insError) return NextResponse.json({ error: insError.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
 }

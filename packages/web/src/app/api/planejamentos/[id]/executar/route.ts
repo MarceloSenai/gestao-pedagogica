@@ -12,12 +12,7 @@ import type {
   Turma,
   Ambiente,
   AmbienteRecurso,
-  Json,
 } from "@/types/database";
-
-interface TurmaWithDisciplina extends Turma {
-  disciplinas: { requisitos_recursos: Json } | null;
-}
 
 export async function POST(
   _request: NextRequest,
@@ -47,10 +42,10 @@ export async function POST(
     );
   }
 
-  // 2. Fetch turmas for this semestre/ano with disciplina requisitos
+  // 2. Fetch turmas for this semestre/ano
   const { data: rawTurmas, error: turmasError } = await supabase
     .from("turmas")
-    .select("*, disciplinas(requisitos_recursos)")
+    .select("*")
     .eq("semestre", planejamento.semestre)
     .eq("ano", planejamento.ano);
 
@@ -58,7 +53,7 @@ export async function POST(
     return NextResponse.json({ error: turmasError.message }, { status: 500 });
   }
 
-  const turmas = (rawTurmas ?? []) as unknown as TurmaWithDisciplina[];
+  const turmas = (rawTurmas ?? []) as unknown as Turma[];
 
   if (turmas.length === 0) {
     return NextResponse.json(
@@ -106,26 +101,33 @@ export async function POST(
     recursosByAmbiente.set(ar.ambiente_id, list);
   }
 
-  // 4. Build TurmaInput[] and AmbienteInput[]
-  const turmaInputs: TurmaInput[] = turmas.map((t) => {
-    let requisitos: string[] = [];
-    if (t.disciplinas?.requisitos_recursos) {
-      const raw = t.disciplinas.requisitos_recursos;
-      if (Array.isArray(raw)) {
-        requisitos = raw.filter((r): r is string => typeof r === "string");
-      }
-    }
+  // 4. Fetch disciplina_recursos from junction table
+  const disciplinaIds = [...new Set(turmas.map((t) => t.disciplina_id))];
+  const recursosByDisciplina = new Map<string, string[]>();
 
-    return {
-      id: t.id,
-      disciplina_id: t.disciplina_id,
-      docente_id: t.docente_id,
-      turno: t.turno,
-      vagas: t.vagas,
-      matriculas_count: matriculasCount.get(t.id) ?? 0,
-      requisitos_recursos: requisitos,
-    };
-  });
+  if (disciplinaIds.length > 0) {
+    const { data: rawDR } = await supabase
+      .from("disciplina_recursos")
+      .select("disciplina_id, recurso_id")
+      .in("disciplina_id", disciplinaIds);
+
+    for (const row of (rawDR ?? []) as { disciplina_id: string; recurso_id: string }[]) {
+      const list = recursosByDisciplina.get(row.disciplina_id) ?? [];
+      list.push(row.recurso_id);
+      recursosByDisciplina.set(row.disciplina_id, list);
+    }
+  }
+
+  // Build TurmaInput[] and AmbienteInput[]
+  const turmaInputs: TurmaInput[] = turmas.map((t) => ({
+    id: t.id,
+    disciplina_id: t.disciplina_id,
+    docente_id: t.docente_id,
+    turno: t.turno,
+    vagas: t.vagas,
+    matriculas_count: matriculasCount.get(t.id) ?? 0,
+    requisitos_recursos: recursosByDisciplina.get(t.disciplina_id) ?? [],
+  }));
 
   const ambienteInputs: AmbienteInput[] = ambientes.map((a) => ({
     id: a.id,

@@ -4,10 +4,19 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 export async function GET(request: NextRequest) {
   const supabase = await createServerSupabaseClient();
   const predioId = request.nextUrl.searchParams.get("predio_id");
-
   const status = request.nextUrl.searchParams.get("status");
 
-  let query = supabase.from("ambientes").select("*, predios(nome)").order("nome");
+  const pageParam = request.nextUrl.searchParams.get("page");
+  const page = Math.max(1, Number(pageParam) || 1);
+  const limit = Math.min(100, Math.max(1, Number(request.nextUrl.searchParams.get("limit")) || 50));
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
+    .from("ambientes")
+    .select("*, predios(nome)", { count: "exact" })
+    .range(from, to)
+    .order("nome");
 
   if (predioId) {
     query = query.eq("predio_id", predioId);
@@ -16,10 +25,23 @@ export async function GET(request: NextRequest) {
     query = query.eq("status", status);
   }
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+
+  if (!pageParam) {
+    return NextResponse.json(data);
+  }
+
+  return NextResponse.json({
+    data: data ?? [],
+    pagination: {
+      page,
+      limit,
+      total: count ?? 0,
+      totalPages: Math.ceil((count ?? 0) / limit),
+    },
+  });
 }
 
 export async function POST(request: NextRequest) {

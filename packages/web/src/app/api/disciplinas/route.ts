@@ -5,16 +5,39 @@ export async function GET(request: NextRequest) {
   const supabase = await createServerSupabaseClient();
   const cursoId = request.nextUrl.searchParams.get("curso_id");
 
-  let query = supabase.from("disciplinas").select("*, cursos(nome)").order("nome");
+  const pageParam = request.nextUrl.searchParams.get("page");
+  const page = Math.max(1, Number(pageParam) || 1);
+  const limit = Math.min(100, Math.max(1, Number(request.nextUrl.searchParams.get("limit")) || 50));
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
+    .from("disciplinas")
+    .select("*, cursos(nome)", { count: "exact" })
+    .range(from, to)
+    .order("nome");
 
   if (cursoId) {
     query = query.eq("curso_id", cursoId);
   }
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+
+  if (!pageParam) {
+    return NextResponse.json(data);
+  }
+
+  return NextResponse.json({
+    data: data ?? [],
+    pagination: {
+      page,
+      limit,
+      total: count ?? 0,
+      totalPages: Math.ceil((count ?? 0) / limit),
+    },
+  });
 }
 
 export async function POST(request: NextRequest) {

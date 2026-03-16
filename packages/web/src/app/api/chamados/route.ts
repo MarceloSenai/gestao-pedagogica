@@ -8,7 +8,16 @@ export async function GET(request: NextRequest) {
   const prioridade = request.nextUrl.searchParams.get("prioridade");
   const tipo = request.nextUrl.searchParams.get("tipo");
 
-  let query = supabase.from("chamados").select("*");
+  const pageParam = request.nextUrl.searchParams.get("page");
+  const page = Math.max(1, Number(pageParam) || 1);
+  const limit = Math.min(100, Math.max(1, Number(request.nextUrl.searchParams.get("limit")) || 50));
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
+    .from("chamados")
+    .select("*", { count: "exact" })
+    .range(from, to);
 
   if (status) {
     query = query.eq("status", status);
@@ -23,10 +32,23 @@ export async function GET(request: NextRequest) {
   // Order by prioridade desc (urgente > alta > media > baixa), then created_at desc
   query = query.order("created_at", { ascending: false });
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+
+  if (!pageParam) {
+    return NextResponse.json(data);
+  }
+
+  return NextResponse.json({
+    data: data ?? [],
+    pagination: {
+      page,
+      limit,
+      total: count ?? 0,
+      totalPages: Math.ceil((count ?? 0) / limit),
+    },
+  });
 }
 
 export async function POST(request: NextRequest) {

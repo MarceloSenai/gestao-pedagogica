@@ -8,9 +8,16 @@ export async function GET(request: NextRequest) {
   const cursoId = searchParams.get("curso_id");
   const semestre = searchParams.get("semestre");
 
+  const pageParam = searchParams.get("page");
+  const page = Math.max(1, Number(pageParam) || 1);
+  const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit")) || 50));
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
   let query = supabase
     .from("turmas")
-    .select("*, disciplinas(nome, cursos(nome)), pessoas(nome)");
+    .select("*, disciplinas(nome, cursos(nome)), pessoas(nome)", { count: "exact" })
+    .range(from, to);
 
   if (disciplinaId) {
     query = query.eq("disciplina_id", disciplinaId);
@@ -24,10 +31,23 @@ export async function GET(request: NextRequest) {
     query = query.eq("semestre", semestre);
   }
 
-  const { data, error } = await query.order("semestre", { ascending: false });
+  const { data, error, count } = await query.order("semestre", { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+
+  if (!pageParam) {
+    return NextResponse.json(data);
+  }
+
+  return NextResponse.json({
+    data: data ?? [],
+    pagination: {
+      page,
+      limit,
+      total: count ?? 0,
+      totalPages: Math.ceil((count ?? 0) / limit),
+    },
+  });
 }
 
 export async function POST(request: NextRequest) {
