@@ -19,6 +19,7 @@ const emptyForm: DisciplinaInsert = {
   nome: "",
   curso_id: "",
   carga_horaria: 0,
+  aulas_semana: 2,
   requisitos_recursos: null,
 };
 
@@ -103,6 +104,7 @@ function DisciplinasPage() {
       nome: item.nome,
       curso_id: item.curso_id,
       carga_horaria: item.carga_horaria,
+      aulas_semana: item.aulas_semana,
       requisitos_recursos: item.requisitos_recursos,
     });
     setModalOpen(true);
@@ -137,6 +139,7 @@ function DisciplinasPage() {
           nome: form.nome,
           curso_id: form.curso_id,
           carga_horaria: form.carga_horaria,
+          aulas_semana: form.aulas_semana ?? 2,
         }),
       });
       if (!res.ok) throw new Error("Erro ao salvar");
@@ -209,6 +212,7 @@ function DisciplinasPage() {
       render: (_v, item) => cursoMap[item.curso_id] ?? "\u2014",
     },
     { key: "carga_horaria", label: "Carga Horária" },
+    { key: "aulas_semana", label: "Aulas/Semana" },
   ];
 
   if (loading) return <div className="space-y-3"><div className="h-8 w-48 animate-pulse rounded bg-[var(--color-primary-light)]" /><div className="h-64 animate-pulse rounded-lg bg-[var(--color-primary-light)]" /></div>;
@@ -360,6 +364,17 @@ function DisciplinasPage() {
               setForm((f) => ({ ...f, carga_horaria: Number(e.target.value) }))
             }
             required
+          />
+          <FormField
+            label="Aulas por Semana"
+            name="aulas_semana"
+            type="number"
+            value={String(form.aulas_semana ?? 2)}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, aulas_semana: Math.max(1, Math.min(10, Number(e.target.value) || 1)) }))
+            }
+            required
+            placeholder="Ex: 2 (slots de aula por semana)"
           />
           {editing?.requisitos_recursos && (
             <div>

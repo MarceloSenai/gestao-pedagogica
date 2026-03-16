@@ -14,6 +14,7 @@ function makeTurma(overrides: Partial<TurmaInput> = {}): TurmaInput {
     vagas: 40,
     matriculas_count: 30,
     requisitos_recursos: [],
+    aulas_semana: 2,
     ...overrides,
   };
 }

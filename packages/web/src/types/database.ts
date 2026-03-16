@@ -135,6 +135,7 @@ export interface Database {
           curso_id: string;
           nome: string;
           carga_horaria: number;
+          aulas_semana: number;
           requisitos_recursos: Json;
           created_at: string;
           updated_at: string;
@@ -144,6 +145,7 @@ export interface Database {
           curso_id: string;
           nome: string;
           carga_horaria: number;
+          aulas_semana?: number;
           requisitos_recursos?: Json;
           created_at?: string;
           updated_at?: string;
@@ -153,6 +155,7 @@ export interface Database {
           curso_id?: string;
           nome?: string;
           carga_horaria?: number;
+          aulas_semana?: number;
           requisitos_recursos?: Json;
           updated_at?: string;
         };
@@ -626,6 +629,81 @@ export interface Database {
         };
         Relationships: [];
       };
+      slots_horario: {
+        Row: {
+          id: string;
+          turno: string;
+          ordem: number;
+          hora_inicio: string;
+          hora_fim: string;
+          label: string;
+        };
+        Insert: {
+          id?: string;
+          turno: string;
+          ordem: number;
+          hora_inicio: string;
+          hora_fim: string;
+          label: string;
+        };
+        Update: {
+          id?: string;
+          turno?: string;
+          ordem?: number;
+          hora_inicio?: string;
+          hora_fim?: string;
+          label?: string;
+        };
+        Relationships: [];
+      };
+      horarios_aula: {
+        Row: {
+          id: string;
+          alocacao_id: string;
+          dia_semana: number;
+          slot_id: string;
+          ambiente_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          alocacao_id: string;
+          dia_semana: number;
+          slot_id: string;
+          ambiente_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          alocacao_id?: string;
+          dia_semana?: number;
+          slot_id?: string;
+          ambiente_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "horarios_aula_alocacao_id_fkey";
+            columns: ["alocacao_id"];
+            isOneToOne: false;
+            referencedRelation: "alocacoes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "horarios_aula_slot_id_fkey";
+            columns: ["slot_id"];
+            isOneToOne: false;
+            referencedRelation: "slots_horario";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "horarios_aula_ambiente_id_fkey";
+            columns: ["ambiente_id"];
+            isOneToOne: false;
+            referencedRelation: "ambientes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -715,3 +793,11 @@ export type AlteracaoExtraordinariaInsert = Database["public"]["Tables"]["altera
 export type AlteracaoExtraordinariaUpdate = Database["public"]["Tables"]["alteracoes_extraordinarias"]["Update"];
 export type AlteracaoTipo = "adicionar" | "remover" | "modificar";
 export type AlteracaoStatus = "pendente" | "aprovada" | "rejeitada";
+
+export type SlotHorario = Database["public"]["Tables"]["slots_horario"]["Row"];
+export type SlotHorarioInsert = Database["public"]["Tables"]["slots_horario"]["Insert"];
+
+export type HorarioAula = Database["public"]["Tables"]["horarios_aula"]["Row"];
+export type HorarioAulaInsert = Database["public"]["Tables"]["horarios_aula"]["Insert"];
+
+export type DiaSemana = 1 | 2 | 3 | 4 | 5 | 6;

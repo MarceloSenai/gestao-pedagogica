@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
       nome: body.nome,
       curso_id: body.curso_id,
       carga_horaria: body.carga_horaria,
+      aulas_semana: body.aulas_semana ?? 2,
       requisitos_recursos: body.requisitos_recursos ?? [],
     })
     .select()

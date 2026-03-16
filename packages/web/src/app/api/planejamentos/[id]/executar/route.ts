@@ -5,6 +5,7 @@ import {
   analyzeBottlenecks,
   type TurmaInput,
   type AmbienteInput,
+  type SlotInput,
 } from "@/lib/allocation/engine";
 import { createNotification } from "@/lib/notifications/create";
 import type {
@@ -42,10 +43,10 @@ export async function POST(
     );
   }
 
-  // 2. Fetch turmas for this semestre/ano
+  // 2. Fetch turmas + disciplinas (need aulas_semana)
   const { data: rawTurmas, error: turmasError } = await supabase
     .from("turmas")
-    .select("*")
+    .select("*, disciplinas(id, aulas_semana)")
     .eq("semestre", planejamento.semestre)
     .eq("ano", planejamento.ano);
 
@@ -53,7 +54,7 @@ export async function POST(
     return NextResponse.json({ error: turmasError.message }, { status: 500 });
   }
 
-  const turmas = (rawTurmas ?? []) as unknown as Turma[];
+  const turmas = (rawTurmas ?? []) as unknown as (Turma & { disciplinas: { id: string; aulas_semana: number } | null })[];
 
   if (turmas.length === 0) {
     return NextResponse.json(
@@ -62,20 +63,19 @@ export async function POST(
     );
   }
 
-  // Count matriculas for each turma
+  // Count matriculas
   const turmaIds = turmas.map((t) => t.id);
   const { data: rawMatriculas } = await supabase
     .from("matriculas")
     .select("turma_id")
     .in("turma_id", turmaIds);
 
-  const matriculas = (rawMatriculas ?? []) as unknown as { turma_id: string }[];
   const matriculasCount = new Map<string, number>();
-  for (const m of matriculas) {
+  for (const m of (rawMatriculas ?? []) as { turma_id: string }[]) {
     matriculasCount.set(m.turma_id, (matriculasCount.get(m.turma_id) ?? 0) + 1);
   }
 
-  // 3. Fetch active ambientes with their recursos
+  // 3. Fetch active ambientes with recursos
   const { data: rawAmbientes, error: ambError } = await supabase
     .from("ambientes")
     .select("*")
@@ -93,7 +93,6 @@ export async function POST(
 
   const ambRecursos = (rawAmbRecursos ?? []) as unknown as AmbienteRecurso[];
 
-  // Build recurso map per ambiente
   const recursosByAmbiente = new Map<string, string[]>();
   for (const ar of ambRecursos) {
     const list = recursosByAmbiente.get(ar.ambiente_id) ?? [];
@@ -101,7 +100,7 @@ export async function POST(
     recursosByAmbiente.set(ar.ambiente_id, list);
   }
 
-  // 4. Fetch disciplina_recursos from junction table
+  // 4. Fetch disciplina_recursos
   const disciplinaIds = [...new Set(turmas.map((t) => t.disciplina_id))];
   const recursosByDisciplina = new Map<string, string[]>();
 
@@ -118,7 +117,23 @@ export async function POST(
     }
   }
 
-  // Build TurmaInput[] and AmbienteInput[]
+  // 5. Fetch slots_horario
+  const { data: rawSlots } = await supabase
+    .from("slots_horario")
+    .select("*")
+    .order("turno")
+    .order("ordem");
+
+  const slots: SlotInput[] = ((rawSlots ?? []) as { id: string; turno: string; ordem: number; hora_inicio: string; hora_fim: string; label: string }[]).map((s) => ({
+    id: s.id,
+    turno: s.turno,
+    ordem: s.ordem,
+    hora_inicio: s.hora_inicio,
+    hora_fim: s.hora_fim,
+    label: s.label,
+  }));
+
+  // 6. Build inputs
   const turmaInputs: TurmaInput[] = turmas.map((t) => ({
     id: t.id,
     disciplina_id: t.disciplina_id,
@@ -127,6 +142,7 @@ export async function POST(
     vagas: t.vagas,
     matriculas_count: matriculasCount.get(t.id) ?? 0,
     requisitos_recursos: recursosByDisciplina.get(t.disciplina_id) ?? [],
+    aulas_semana: t.disciplinas?.aulas_semana ?? 2,
   }));
 
   const ambienteInputs: AmbienteInput[] = ambientes.map((a) => ({
@@ -138,35 +154,74 @@ export async function POST(
     recurso_ids: recursosByAmbiente.get(a.id) ?? [],
   }));
 
-  // 5. Run allocation engine
-  const results = runAllocation(turmaInputs, ambienteInputs);
+  // 7. Run allocation engine (granular if slots exist, legacy otherwise)
+  const results = runAllocation(turmaInputs, ambienteInputs, slots.length > 0 ? slots : undefined);
 
-  // 6. Delete existing alocacoes for this planejamento (re-run support)
+  // 8. Delete existing alocacoes + horarios (re-run support, cascade deletes horarios_aula)
   await supabase.from("alocacoes").delete().eq("planejamento_id", id);
 
-  // 7. Insert results
-  const inserts = results.map((r) => ({
+  // 9. Insert alocacoes
+  const alocInserts = results.map((r) => ({
     planejamento_id: id,
     turma_id: r.turma_id,
     ambiente_id: r.ambiente_id,
-    status: r.status,
+    status: r.status === "parcial" ? "nao_alocada" as const : r.status === "conflito" ? "conflito" as const : r.status === "nao_alocada" ? "nao_alocada" as const : "alocada" as const,
     motivo: r.motivo,
     score: r.score,
   }));
 
-  const { error: insertError } = await supabase
+  const { data: insertedAlocs, error: insertError } = await supabase
     .from("alocacoes")
-    .insert(inserts);
+    .insert(alocInserts)
+    .select("id, turma_id");
 
   if (insertError) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
-  // 8. Analyze bottlenecks (Story 10.0 — Modo Consultivo)
+  // 10. Insert horarios_aula for granular results
+  const alocMap = new Map<string, string>();
+  for (const a of (insertedAlocs ?? []) as { id: string; turma_id: string }[]) {
+    alocMap.set(a.turma_id, a.id);
+  }
+
+  const horarioInserts: Array<{
+    alocacao_id: string;
+    dia_semana: number;
+    slot_id: string;
+    ambiente_id: string;
+  }> = [];
+
+  for (const r of results) {
+    if (r.horarios.length === 0) continue;
+    const alocId = alocMap.get(r.turma_id);
+    if (!alocId) continue;
+    for (const h of r.horarios) {
+      horarioInserts.push({
+        alocacao_id: alocId,
+        dia_semana: h.dia_semana,
+        slot_id: h.slot_id,
+        ambiente_id: h.ambiente_id,
+      });
+    }
+  }
+
+  if (horarioInserts.length > 0) {
+    const { error: horarioError } = await supabase
+      .from("horarios_aula")
+      .insert(horarioInserts);
+
+    if (horarioError) {
+      return NextResponse.json({ error: `Alocações salvas mas erro nos horários: ${horarioError.message}` }, { status: 500 });
+    }
+  }
+
+  // 11. Bottleneck analysis
   const bottlenecks = analyzeBottlenecks(turmaInputs, ambienteInputs, results);
 
-  // 9. Return results + summary + bottlenecks
+  // 12. Summary
   const alocadas = results.filter((r) => r.status === "alocada").length;
+  const parciais = results.filter((r) => r.status === "parcial").length;
   const naoAlocadas = results.filter((r) => r.status === "nao_alocada").length;
   const conflitos = results.filter((r) => r.status === "conflito").length;
 
@@ -177,7 +232,7 @@ export async function POST(
   await createNotification(supabase, {
     tipo: conflitos > 0 ? "conflito" : "info",
     titulo: "Alocação executada",
-    mensagem: `Planejamento ${planejamento.semestre}/${planejamento.ano}: ${alocadas} alocadas, ${naoAlocadas} não alocadas, ${conflitos} conflitos (${taxaSucesso}% sucesso)`,
+    mensagem: `Planejamento ${planejamento.semestre}/${planejamento.ano}: ${alocadas} alocadas, ${parciais} parciais, ${naoAlocadas} não alocadas, ${conflitos} conflitos (${taxaSucesso}% sucesso). ${horarioInserts.length} horários gerados.`,
     referencia_tipo: "planejamento",
     referencia_id: id,
   });
@@ -187,9 +242,11 @@ export async function POST(
     summary: {
       total: results.length,
       alocadas,
+      parciais,
       nao_alocadas: naoAlocadas,
       conflitos,
       taxa_sucesso: taxaSucesso,
+      horarios_gerados: horarioInserts.length,
     },
     bottlenecks,
   });
